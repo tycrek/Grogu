@@ -31,6 +31,20 @@ public class PlaceholderUpdater implements Runnable {
                 e.printStackTrace();
             }
             //#endregion
+
+            // Check last update difference
+            final var currentTime = System.currentTimeMillis();
+            final var threshold = 500;
+            if ((currentTime - lastUpdateX.get() > threshold) && (currentTime - lastUpdateY.get() > threshold)) {
+
+                // Update the placeholder if the values have changed
+                if (lastX.get() != x.get() || lastY.get() != y.get()) {
+                    parent.setBackground(JFXBackgroundPlaceholderImage.get(x.get(), y.get()));
+                    lastX.set(x.get());
+                    lastY.set(y.get());
+                    System.out.println("Placeholder updated");
+                }
+            }
         }
     }
 
