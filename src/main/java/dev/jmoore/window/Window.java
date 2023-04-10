@@ -31,6 +31,9 @@ public class Window extends Application {
         // Primary scene
         Scene scene = new Scene(ROOT, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
 
+        // Mouse click listener
+        scene.setOnMouseClicked(event -> System.out.println("Mouse clicked: " + event.getSceneX() + ", " + event.getSceneY()));
+
         // Mouse move listener
         scene.setOnMouseMoved(event -> mousePositionLabel.setText("Mouse position: " + event.getSceneX() + "x" + event.getSceneY()));
 
