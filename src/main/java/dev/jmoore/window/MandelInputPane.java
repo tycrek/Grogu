@@ -10,9 +10,21 @@ public class MandelInputPane extends FlowPane {
     public MandelInputPane(Grogu.Axis axis) {
         super(Orientation.HORIZONTAL, 4.0, 4.0);
 
-        Label label = new Label(axis.name() + " Axis:");
-
+        // Create the text field
         TextField textField = new TextField();
-        this.getChildren().addAll(label, textField);
+
+        // * ENTER key handler: <currently does nothing>
+        textField.setOnAction(event -> {
+            System.out.println("Input provided: " + textField.getText());
+            try {
+                double value = Double.parseDouble(textField.getText());
+            } catch (NumberFormatException e) {
+                SimpleAlert.show("Invalid input", "Invalid input: " + textField.getText());
+            }
+        });
+
+        this.getChildren().addAll(
+                new Label(axis.name() + " Axis:"),
+                textField);
     }
 }
