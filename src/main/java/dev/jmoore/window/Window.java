@@ -30,6 +30,10 @@ public class Window extends Application {
 
         // Primary scene
         Scene scene = new Scene(ROOT, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
+
+        // Mouse move listener
+        scene.setOnMouseMoved(event -> mousePositionLabel.setText("Mouse position: " + event.getSceneX() + "x" + event.getSceneY()));
+
         //#endregion
         //#region       Placeholder image updater
 
