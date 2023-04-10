@@ -23,6 +23,15 @@ public class PlaceholderUpdater implements Runnable {
 
     @Override
     public void run() {
+        while (parent.isVisible()) {
+            //#region Sleeper
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //#endregion
+        }
     }
 
     public void updateX(double x) {
