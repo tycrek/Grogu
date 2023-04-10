@@ -51,8 +51,10 @@ public class MandelInputPane extends FlowPane {
             SimpleAlert.show("Invalid input", String.format("Invalid input: %s%n%nOnly numbers (including decimals) are allowed.", input));
         });
 
-        this.getChildren().addAll(
-                new Label(axis.name() + " Axis:"),
-                textField);
+        // * Axis label
+        var label = new Label(axis.name() + " Axis:");
+        label.setStyle("-fx-font-weight: bold");
+
+        this.getChildren().addAll(label, textField);
     }
 }
