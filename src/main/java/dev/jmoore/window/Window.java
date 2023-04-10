@@ -31,5 +31,12 @@ public class Window extends Application {
         // Primary scene
         Scene scene = new Scene(ROOT, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
         //#endregion
+        //#region       Stage setup
+
+        // Set the stage
+        stage.setScene(scene);
+        stage.setTitle("Grogu - Fractal experiments");
+        stage.show();
+        //#endregion
     }
 }
