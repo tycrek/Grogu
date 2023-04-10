@@ -2,6 +2,7 @@ package dev.jmoore.window;
 
 import dev.jmoore.Grogu;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
@@ -28,14 +29,16 @@ public class Window extends Application {
         MandelInputPane inputY = new MandelInputPane(Grogu.Axis.Y);
 
         // Create the grid pane and add the input panes
-        var gridPane = new GridPane();
+        var inputGrid = new GridPane();
+        inputGrid.setPadding(new Insets(16, 16, 16, 16));
+        inputGrid.setVgap(4);
         // Row 0
-        gridPane.add(mousePositionLabel, 0, 0);
+        inputGrid.add(mousePositionLabel, 0, 0);
         // Row 1
-        gridPane.add(inputX, 0, 1);
-        gridPane.add(inputY, 1, 1);
+        inputGrid.add(inputX, 0, 1);
+        inputGrid.add(inputY, 0, 2);
 
-        StackPane ROOT = new StackPane(gridPane);
+        StackPane ROOT = new StackPane(inputGrid);
 
         // Primary scene
         Scene scene = new Scene(ROOT, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
