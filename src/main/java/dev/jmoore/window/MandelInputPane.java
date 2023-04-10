@@ -5,23 +5,18 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import lombok.Getter;
 
 public class MandelInputPane extends FlowPane {
+
+    @Getter
+    private final TextField textField;
+
     public MandelInputPane(Grogu.Axis axis) {
         super(Orientation.HORIZONTAL, 4.0, 4.0);
 
         // Create the text field
-        TextField textField = new TextField();
-
-        // * ENTER key handler: <currently does nothing>
-        textField.setOnAction(event -> {
-            System.out.println("Input provided: " + textField.getText());
-            try {
-                double value = Double.parseDouble(textField.getText());
-            } catch (NumberFormatException e) {
-                SimpleAlert.show("Invalid input", "Invalid input: " + textField.getText());
-            }
-        });
+        textField = new TextField();
 
         // * Any key handler: handles input validation per character
         textField.addEventHandler(javafx.scene.input.KeyEvent.KEY_TYPED, (event) -> {

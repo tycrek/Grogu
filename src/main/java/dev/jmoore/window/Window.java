@@ -28,6 +28,23 @@ public class Window extends Application {
         MandelInputPane inputX = new MandelInputPane(Grogu.Axis.X);
         MandelInputPane inputY = new MandelInputPane(Grogu.Axis.Y);
 
+        Runnable inputHandler = () -> {
+            var xText = inputX.getTextField().getText();
+            var yText = inputY.getTextField().getText();
+            try {
+                var xD = Double.parseDouble(xText);
+                var yD = Double.parseDouble(yText);
+                SimpleAlert.show("Valid input", String.format("Valid inputs: [%s, %s]", xText, yText));
+            } catch (NumberFormatException e) {
+                if (!yText.equals("") && !xText.equals(""))
+                    SimpleAlert.show("Invalid input", String.format("Invalid inputs: [%s, %s]%n%nOnly numbers (including decimals) are allowed.", xText, yText));
+                else SimpleAlert.show("Invalid input", "Invalid input: <empty>");
+            }
+        };
+
+        inputX.getTextField().setOnAction(event -> inputHandler.run());
+        inputY.getTextField().setOnAction(event -> inputHandler.run());
+
         // Create the grid pane and add the input panes
         var inputGrid = new GridPane();
         inputGrid.setPadding(new Insets(16, 16, 16, 16));
