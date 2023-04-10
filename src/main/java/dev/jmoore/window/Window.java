@@ -31,6 +31,17 @@ public class Window extends Application {
         // Primary scene
         Scene scene = new Scene(ROOT, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
         //#endregion
+        //#region       Placeholder image updater
+
+        // Window resize listener thread (updates the placeholder image)
+        val placeholderUpdater = new PlaceholderUpdater(ROOT, WIDTH, HEIGHT);
+        new Thread(placeholderUpdater, "PlaceholderUpdateThread").start();
+
+        // Stage property listeners
+        stage.widthProperty().addListener((obs, oldVal, newVal) -> placeholderUpdater.updateX(newVal.doubleValue()));
+        stage.heightProperty().addListener((obs, oldVal, newVal) -> placeholderUpdater.updateY(newVal.doubleValue()));
+
+        //#endregion
         //#region       Stage setup
 
         // Set the stage
