@@ -37,6 +37,10 @@ public class Window extends Application {
         stage.setScene(scene);
         stage.setTitle("Grogu - Fractal experiments");
         stage.show();
+
+        // For some reason this is required to close the application, it did it automatically at first so idk what happened
+        stage.setOnCloseRequest(event -> System.exit(0));
+
         //#endregion
     }
 }
