@@ -98,8 +98,15 @@ public class Window extends Application {
         new Thread(placeholderUpdater, "PlaceholderUpdateThread").start();
 
         // Stage property listeners
-        stage.widthProperty().addListener((obs, oldVal, newVal) -> placeholderUpdater.updateX(newVal.doubleValue()));
-        stage.heightProperty().addListener((obs, oldVal, newVal) -> placeholderUpdater.updateY(newVal.doubleValue()));
+        Runnable updateW2CSize = () -> w2cSizeValueLabel.setText(String.format("%sx%s", stage.getWidth(), stage.getHeight()));
+        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            updateW2CSize.run();
+            placeholderUpdater.updateX(newVal.doubleValue());
+        });
+        stage.heightProperty().addListener((obs, oldVal, newVal) -> {
+            updateW2CSize.run();
+            placeholderUpdater.updateY(newVal.doubleValue());
+        });
 
         //#endregion
         //#region       Stage setup
