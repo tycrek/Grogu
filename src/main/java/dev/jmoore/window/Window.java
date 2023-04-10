@@ -59,7 +59,8 @@ public class Window extends Application {
 
         // Create the grid pane and add the input panes
         var inputGrid = new GridPane();
-        inputGrid.setPadding(new Insets(16, 16, 16, 16));
+        inputGrid.setPadding(new Insets(16, 0, 0, 16));
+        inputGrid.getColumnConstraints().addAll(new ColumnConstraints(180), new ColumnConstraints(180));
         inputGrid.setVgap(4);
         // Row 0
         inputGrid.add(inputX, 0, 0);
@@ -106,6 +107,7 @@ public class Window extends Application {
         // Set the stage
         stage.setScene(scene);
         stage.setTitle("Grogu - Fractal experiments");
+        stage.setMinWidth(400);
         stage.show();
 
         // For some reason this is required to close the application, it did it automatically at first so idk what happened
