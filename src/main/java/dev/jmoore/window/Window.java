@@ -13,8 +13,8 @@ import lombok.val;
 
 public class Window extends Application {
 
-    final static int WIDTH = 800;
-    final static int HEIGHT = 600;
+    public final static int WIDTH = 800;
+    public final static int HEIGHT = 600;
 
     @Override
     public void start(Stage stage) {
