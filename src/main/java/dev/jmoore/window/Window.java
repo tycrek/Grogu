@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -22,7 +23,18 @@ public class Window extends Application {
         //#region           UI setup
 
         // Mouse position label
-        val mousePositionLabel = new Label("Mouse position: 0x0");
+        val mousePositionLabel = new Label("Mouse position:");
+        val mousePositionCoordsLabel = new Label("0x0");
+
+        // W2CCoords labels
+        val w2cSizeLabel = new Label("Window size:");
+        val w2cSizeValueLabel = new Label("0x0");
+
+        val w2cCoordsLabel = new Label("Cartesian coordinates:");
+        val w2cCoordsValueLabel = new Label("0x0");
+
+        val w2cScaleLabel = new Label("Cartesian scale:");
+        val w2cScaleValueLabel = new Label("0x0");
 
         // Create the input panes
         MandelInputPane inputX = new MandelInputPane(Grogu.Axis.X);
@@ -50,10 +62,21 @@ public class Window extends Application {
         inputGrid.setPadding(new Insets(16, 16, 16, 16));
         inputGrid.setVgap(4);
         // Row 0
-        inputGrid.add(mousePositionLabel, 0, 0);
+        inputGrid.add(inputX, 0, 0);
         // Row 1
-        inputGrid.add(inputX, 0, 1);
-        inputGrid.add(inputY, 0, 2);
+        inputGrid.add(inputY, 0, 1);
+        // Row 2
+        inputGrid.add(mousePositionLabel, 0, 2);
+        inputGrid.add(mousePositionCoordsLabel, 1, 2);
+        // Row 3
+        inputGrid.add(w2cSizeLabel, 0, 3);
+        inputGrid.add(w2cSizeValueLabel, 1, 3);
+        // Row 4
+        inputGrid.add(w2cCoordsLabel, 0, 4);
+        inputGrid.add(w2cCoordsValueLabel, 1, 4);
+        // Row 5
+        inputGrid.add(w2cScaleLabel, 0, 5);
+        inputGrid.add(w2cScaleValueLabel, 1, 5);
 
         StackPane ROOT = new StackPane(inputGrid);
 
@@ -64,7 +87,7 @@ public class Window extends Application {
         scene.setOnMouseClicked(event -> System.out.println("Mouse clicked: " + event.getSceneX() + ", " + event.getSceneY()));
 
         // Mouse move listener
-        scene.setOnMouseMoved(event -> mousePositionLabel.setText("Mouse position: " + event.getSceneX() + "x" + event.getSceneY()));
+        scene.setOnMouseMoved(event -> mousePositionCoordsLabel.setText(String.format("%sx%s", event.getSceneX(), event.getSceneY())));
 
         //#endregion
         //#region       Placeholder image updater
