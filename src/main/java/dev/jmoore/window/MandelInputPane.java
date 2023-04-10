@@ -23,6 +23,34 @@ public class MandelInputPane extends FlowPane {
             }
         });
 
+        // * Any key handler: handles input validation per character
+        textField.addEventHandler(javafx.scene.input.KeyEvent.KEY_TYPED, (event) -> {
+            var input = event.getCharacter();
+
+            // Check how many decimal points are in the text field
+            int decimalCount = 0;
+            for (char c : textField.getText().toCharArray())
+                if (c == '.')
+                    decimalCount++;
+            System.out.printf("Decimal count: %d%n", decimalCount);
+
+            // Input validation
+            if ((input.equals(".") && decimalCount < 1) // ? Only one decimal point allowed
+                    || (input.equals("\b") // ? Allow backspace
+                    || input.equals("\u007F") // ? Allow delete
+                    || input.equals("\t") // ? Allow tab
+                    || input.equals("\r") // ? Allow enter
+                    || input.matches("[0-9]"))) // ? Allow numbers
+                return;
+
+            // Otherwise, block the event
+            event.consume();
+            System.out.printf("Key input blocked: %s%n", input);
+
+            // Show an alert
+            SimpleAlert.show("Invalid input", String.format("Invalid input: %s%n%nOnly numbers (including decimals) are allowed.", input));
+        });
+
         this.getChildren().addAll(
                 new Label(axis.name() + " Axis:"),
                 textField);
