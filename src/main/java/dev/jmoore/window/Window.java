@@ -22,9 +22,18 @@ public class Window extends Application {
 
         // Mouse position label
         val mousePositionLabel = new Label("Mouse position: 0x0");
+
+        // Create the input panes
+        MandelInputPane inputX = new MandelInputPane(Grogu.Axis.X);
+        MandelInputPane inputY = new MandelInputPane(Grogu.Axis.Y);
+
+        // Create the grid pane and add the input panes
         var gridPane = new GridPane();
         // Row 0
         gridPane.add(mousePositionLabel, 0, 0);
+        // Row 1
+        gridPane.add(inputX, 0, 1);
+        gridPane.add(inputY, 1, 1);
 
         StackPane ROOT = new StackPane(gridPane);
 
