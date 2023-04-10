@@ -24,4 +24,14 @@ public class PlaceholderUpdater implements Runnable {
     @Override
     public void run() {
     }
+
+    public void updateX(double x) {
+        this.x.set((int) x);
+        this.lastUpdateX.set(System.currentTimeMillis());
+    }
+
+    public void updateY(double y) {
+        this.y.set((int) y);
+        this.lastUpdateY.set(System.currentTimeMillis());
+    }
 }
