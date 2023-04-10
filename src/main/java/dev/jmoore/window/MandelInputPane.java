@@ -16,7 +16,7 @@ public class MandelInputPane extends FlowPane {
         super(Orientation.HORIZONTAL, 4.0, 4.0);
 
         // Create the text field
-        textField = new TextField();
+        textField = new TextField("0");
 
         // * Any key handler: handles input validation per character
         textField.addEventHandler(javafx.scene.input.KeyEvent.KEY_TYPED, (event) -> {
