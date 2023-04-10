@@ -37,10 +37,10 @@ public class Window extends Application {
         val w2cScaleValueLabel = new Label("0x0");
 
         // Create the input panes
-        MandelInputPane inputX = new MandelInputPane(Grogu.Axis.X);
-        MandelInputPane inputY = new MandelInputPane(Grogu.Axis.Y);
+        val inputX = new MandelInputPane(Grogu.Axis.X);
+        val inputY = new MandelInputPane(Grogu.Axis.Y);
 
-        Runnable inputHandler = () -> {
+        final Runnable inputHandler = () -> {
             var xText = inputX.getTextField().getText();
             var yText = inputY.getTextField().getText();
             try {
@@ -58,7 +58,7 @@ public class Window extends Application {
         inputY.getTextField().setOnAction(event -> inputHandler.run());
 
         // Create the grid pane and add the input panes
-        var inputGrid = new GridPane();
+        val inputGrid = new GridPane();
         inputGrid.setPadding(new Insets(16, 0, 0, 16));
         inputGrid.getColumnConstraints().addAll(new ColumnConstraints(180), new ColumnConstraints(180));
         inputGrid.setVgap(4);
