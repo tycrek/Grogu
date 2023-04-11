@@ -77,6 +77,33 @@ public class Window extends Application {
             System.out.println("Done!");
         });
 
+        scene.setOnScroll(event -> {
+            // Get new scales
+            final double SCALE_DIVISOR = 4d;
+            double newScaleX = Double.toString(event.getDeltaY()).contains("-")
+                ? W2CCoords.xScale / SCALE_DIVISOR
+                    : W2CCoords.xScale * SCALE_DIVISOR;
+            double newScaleY = Double.toString(event.getDeltaY()).contains("-")
+                ? W2CCoords.yScale / SCALE_DIVISOR
+                    : W2CCoords.yScale * SCALE_DIVISOR;
+
+            System.out.println("newScaleX: " + newScaleX);
+            System.out.println("newScaleY: " + newScaleY);
+
+            // Update scale inputs
+            utilityGrid.getScaleXInput().getTextField().setText(Double.toString(newScaleX));
+            utilityGrid.getScaleYInput().getTextField().setText(Double.toString(newScaleY));
+
+            // Update W2CCoords
+            W2CCoords.xScale = newScaleX;
+            W2CCoords.yScale = newScaleY;
+
+            System.out.println("Generating...");
+            UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
+                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height)))), stage);
+            System.out.println("Done!");
+        });
+
         //#endregion
         //#region       Window resize operations
 
