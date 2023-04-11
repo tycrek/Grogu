@@ -106,6 +106,8 @@ public class Window extends Application {
         // Function to run both runnables and update the placeholder image, depending on the axis
         Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldSize, newSize) -> {
             updateCartesianConstraints.run();
+            UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
+                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, utilityGrid)))), stage);
             if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue();
             else if (axis == Grogu.Axis.Y) W2CCoords.height = newSize.doubleValue();
         };
