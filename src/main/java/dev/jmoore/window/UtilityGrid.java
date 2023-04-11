@@ -94,6 +94,9 @@ public class UtilityGrid {
                 GenConfig.Image.ResolutionX = Integer.parseInt(resolutionXText);
                 GenConfig.Image.ResolutionY = Integer.parseInt(resolutionYText);
 
+                System.out.println("Generating...");
+                updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height)))), stage);
+                System.out.println("Done!");
             } catch (NumberFormatException e) {
                 System.err.println("Invalid input");
             }
