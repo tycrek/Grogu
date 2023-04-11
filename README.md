@@ -39,4 +39,5 @@ Want to give it a try? Download the [latest release](https://github.com/tycrek/G
 ![image](https://user-images.githubusercontent.com/29926144/231132828-0e30ab1b-e21e-467d-8a40-b7be86c946ab.png)
 ![image](https://user-images.githubusercontent.com/29926144/231142798-35d2e727-0091-4b71-9bb0-5afc11d2d655.png)
 
+![image](https://user-images.githubusercontent.com/29926144/231264019-52ac6f69-3333-4b6e-ad26-1c3b316f8b10.png)
 ![image](https://user-images.githubusercontent.com/29926144/231106045-16d34362-09da-4662-9803-2fd354b997f3.png)
