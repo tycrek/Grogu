@@ -98,12 +98,12 @@ public class Window extends Application {
         inputGrid.add(isInSetLabel, 0, 4);
         // Row 5
         inputGrid.add(iterationCountLabel, 0, 5);
-        inputGrid.add(w2cClickedValueLabel, 1, 5);
-        // Row 6
-        inputGrid.add(w2cClickedCoordsLabel, 0, 6);
-        inputGrid.add(w2cClickedCoordsValueLabel, 1, 6);
-        // Row 7
-        inputGrid.add(w2cCoordsLabel, 0, 7);
+
+        // Colour all the inputGrid labels white
+        inputGrid.getChildren().stream()
+                .filter(node -> node instanceof Label)
+                .map(node -> (Label) node)
+                .forEach(label -> label.setStyle("-fx-font-weight: bold; -fx-text-fill: white;"));
         inputGrid.add(w2cCoordsValueLabel, 1, 7);
         // Row 8
         inputGrid.add(w2cScaleLabel, 0, 8);
