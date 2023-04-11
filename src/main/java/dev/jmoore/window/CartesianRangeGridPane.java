@@ -35,9 +35,9 @@ public class CartesianRangeGridPane {
         // Add universal child properties
         cartesianRangeGrid.getChildren().forEach((child) -> {
 
-            // Set label font weight bold
+            // Set label font weight bold, increase font size, and set colour
             if (child instanceof Label)
-                child.setStyle("-fx-font-weight: bold");
+                child.setStyle("-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: #FFF; -fx-fill: blue; -fx-stroke: black; -fx-stroke-width: 2px;");
 
             // Center the labels
             GridPane.setHalignment(child, HPos.CENTER);
