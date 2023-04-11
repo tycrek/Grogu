@@ -12,5 +12,6 @@ public class GenConfig {
     public record Image() {
         public static int ResolutionX = 1;
         public static int ResolutionY = 1;
+        public static double ScaleFactor = 2.0;
     }
 }

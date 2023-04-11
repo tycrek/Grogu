@@ -1,6 +1,7 @@
 package dev.jmoore.window;
 
 import dev.jmoore.Fractal;
+import dev.jmoore.GenConfig;
 import dev.jmoore.Grogu;
 import dev.jmoore.ImageGen;
 import dev.jmoore.grid.W2CCoords;
@@ -77,13 +78,12 @@ public class Window extends Application {
 
         scene.setOnScroll(event -> {
             // Get new scales
-            final double SCALE_DIVISOR = 4d;
             double newScaleX = Double.toString(event.getDeltaY()).contains("-")
-                ? W2CCoords.xScale / SCALE_DIVISOR
-                    : W2CCoords.xScale * SCALE_DIVISOR;
+                ? W2CCoords.xScale / GenConfig.Image.ScaleFactor
+                    : W2CCoords.xScale * GenConfig.Image.ScaleFactor;
             double newScaleY = Double.toString(event.getDeltaY()).contains("-")
-                ? W2CCoords.yScale / SCALE_DIVISOR
-                    : W2CCoords.yScale * SCALE_DIVISOR;
+                ? W2CCoords.yScale / GenConfig.Image.ScaleFactor
+                    : W2CCoords.yScale * GenConfig.Image.ScaleFactor;
 
             // Update scale inputs
             utilityGrid.getScaleXInput().getTextField().setText(Double.toString(newScaleX));
