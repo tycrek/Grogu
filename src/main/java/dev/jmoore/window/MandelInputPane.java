@@ -14,11 +14,11 @@ public class MandelInputPane extends FlowPane {
     @Getter
     private final TextField textField;
 
-    public MandelInputPane(Grogu.Axis axis) {
+    public MandelInputPane(Grogu.Axis axis, String use) {
         super(Orientation.HORIZONTAL, 4.0, 4.0);
 
         // Create the text field
-        textField = new TextField(Double.toString(W2CCoords.xScale));
+        textField = new TextField(Double.toString(use.equals("Scale") ? W2CCoords.xScale : W2CCoords.centerX));
 
         // * Any key handler: handles input validation per character
         textField.addEventHandler(KeyEvent.KEY_TYPED, (event) -> {
@@ -49,8 +49,8 @@ public class MandelInputPane extends FlowPane {
         });
 
         // * Axis label
-        var label = new Label(axis.name() + " Axis Scale:");
-        label.setStyle("-fx-font-weight: bold");
+        var label = new Label(String.format("%s Axis %s:", axis.name(), use));
+        label.setStyle("-fx-font-weight: bold; -fx-text-fill: white;");
 
         this.getChildren().addAll(label, textField);
     }
