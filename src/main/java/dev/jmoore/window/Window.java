@@ -39,6 +39,12 @@ public class Window extends Application {
         val w2cScaleLabel = new Label("Cartesian scale:");
         val w2cScaleValueLabel = new Label("0x0");
 
+        val w2cClickedLabel = new Label("Clicked coordinates (screen):");
+        val w2cClickedValueLabel = new Label("0x0");
+
+        val w2cClickedCoordsLabel = new Label("Clicked coordinates (cartesian):");
+        val w2cClickedCoordsValueLabel = new Label("0x0");
+
         // Create the input panes
         val inputX = new MandelInputPane(Grogu.Axis.X);
         val inputY = new MandelInputPane(Grogu.Axis.Y);
@@ -70,17 +76,23 @@ public class Window extends Application {
         // Row 1
         inputGrid.add(inputY, 0, 1);
         // Row 2
-        inputGrid.add(mousePositionLabel, 0, 2);
-        inputGrid.add(mousePositionCoordsLabel, 1, 2);
+        inputGrid.add(w2cSizeLabel, 0, 2);
+        inputGrid.add(w2cSizeValueLabel, 1, 2);
         // Row 3
-        inputGrid.add(w2cSizeLabel, 0, 3);
-        inputGrid.add(w2cSizeValueLabel, 1, 3);
+        inputGrid.add(mousePositionLabel, 0, 3);
+        inputGrid.add(mousePositionCoordsLabel, 1, 3);
         // Row 4
-        inputGrid.add(w2cCoordsLabel, 0, 4);
-        inputGrid.add(w2cCoordsValueLabel, 1, 4);
+        inputGrid.add(w2cClickedLabel, 0, 4);
+        inputGrid.add(w2cClickedValueLabel, 1, 4);
         // Row 5
-        inputGrid.add(w2cScaleLabel, 0, 5);
-        inputGrid.add(w2cScaleValueLabel, 1, 5);
+        inputGrid.add(w2cClickedCoordsLabel, 0, 5);
+        inputGrid.add(w2cClickedCoordsValueLabel, 1, 5);
+        // Row 6
+        inputGrid.add(w2cCoordsLabel, 0, 6);
+        inputGrid.add(w2cCoordsValueLabel, 1, 6);
+        // Row 7
+        inputGrid.add(w2cScaleLabel, 0, 7);
+        inputGrid.add(w2cScaleValueLabel, 1, 7);
 
         // Overlaid cartesian range grid
         val cartesianRangeGrid = CartesianRangeGridPane.build();
@@ -91,7 +103,12 @@ public class Window extends Application {
         Scene scene = new Scene(ROOT, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
 
         // Mouse click listener
-        scene.setOnMouseClicked(event -> System.out.println("Mouse clicked: " + event.getSceneX() + ", " + event.getSceneY()));
+        scene.setOnMouseClicked(event -> {
+            System.out.println("Mouse clicked: " + event.getSceneX() + ", " + event.getSceneY());
+
+            // Update ClickedLabel text
+            w2cClickedValueLabel.setText(String.format("%sx%s", event.getSceneX(), event.getSceneY()));
+        });
 
         // Mouse move listener
         scene.setOnMouseMoved(event -> mousePositionCoordsLabel.setText(String.format("%sx%s", event.getSceneX(), event.getSceneY())));
