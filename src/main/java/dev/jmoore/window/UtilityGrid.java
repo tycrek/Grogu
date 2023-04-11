@@ -32,6 +32,9 @@ public class UtilityGrid {
     private final Label fractalZScaleLabel = new Label("Z scale:");
     private final Label fractalRealPartZLabel = new Label("Real part Z:");
     private final Label fractalImaginaryPartZLabel = new Label("Imaginary part Z:");
+    // Image config labels
+    private final Label resolutionXLabel = new Label("Resolution X:");
+    private final Label resolutionYLabel = new Label("Resolution Y:");
 
     // Fractal config text fields
     private final TextField fractalIterationsTextField = new TextField(Integer.toString(GenConfig.Fractal.Iterations));
@@ -39,6 +42,9 @@ public class UtilityGrid {
     private final TextField fractalZScaleTextField = new TextField(Double.toString(GenConfig.Fractal.ZScale));
     private final TextField fractalRealPartZTextField = new TextField(Double.toString(GenConfig.Fractal.RealPartZ));
     private final TextField fractalImaginaryPartZTextField = new TextField(Double.toString(GenConfig.Fractal.ImaginaryPartZ));
+    // Image config text fields
+    private final TextField resolutionXTextField = new TextField(Integer.toString(GenConfig.Image.ResolutionX));
+    private final TextField resolutionYTextField = new TextField(Integer.toString(GenConfig.Image.ResolutionY));
 
     // Mouse position label
     private final Label mousePositionLabel = new Label("Mouse position:");
@@ -68,6 +74,9 @@ public class UtilityGrid {
             var fractalZScaleText = ug.getFractalZScaleTextField().getText();
             var fractalRealPartZText = ug.getFractalRealPartZTextField().getText();
             var fractalImaginaryPartZText = ug.getFractalImaginaryPartZTextField().getText();
+            // Image config
+            var resolutionXText = ug.getResolutionXTextField().getText();
+            var resolutionYText = ug.getResolutionYTextField().getText();
 
             try {
                 W2CCoords.xScale = Double.parseDouble(xText);
@@ -81,12 +90,12 @@ public class UtilityGrid {
                 GenConfig.Fractal.ZScale = Double.parseDouble(fractalZScaleText);
                 GenConfig.Fractal.RealPartZ = Double.parseDouble(fractalRealPartZText);
                 GenConfig.Fractal.ImaginaryPartZ = Double.parseDouble(fractalImaginaryPartZText);
+                // Image config
+                GenConfig.Image.ResolutionX = Integer.parseInt(resolutionXText);
+                GenConfig.Image.ResolutionY = Integer.parseInt(resolutionYText);
 
             } catch (NumberFormatException e) {
-                if (!yText.equals("") && !xText.equals("")) SimpleAlert.show("Invalid input", String.format(
-                        "Invalid inputs: [%s, %s, %s, %s]%n%nOnly numbers (including decimals) are allowed.",
-                        xText, yText, xCenterText, yCenterText));
-                else SimpleAlert.show("Invalid input", "Invalid input: <empty>");
+                System.err.println("Invalid input");
             }
         };
 
@@ -106,6 +115,11 @@ public class UtilityGrid {
         ug.getFractalRealPartZTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalRealPartZTextField(), true, true));
         ug.getFractalImaginaryPartZTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
         ug.getFractalImaginaryPartZTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalImaginaryPartZTextField(), true, true));
+        // Image config
+        ug.getResolutionXTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getResolutionXTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getResolutionXTextField(), false, false));
+        ug.getResolutionYTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getResolutionYTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getResolutionYTextField(), false, false));
 
         // Create the grid pane and add the nodes
         ug.getGridPane().setPadding(new Insets(16, 0, 0, 16));
@@ -125,6 +139,11 @@ public class UtilityGrid {
         ug.getGridPane().add(ug.getFractalRealPartZTextField(), 5, 1);
         ug.getGridPane().add(ug.getFractalImaginaryPartZLabel(), 6, 0);
         ug.getGridPane().add(ug.getFractalImaginaryPartZTextField(), 6, 1);
+        // Image config
+        ug.getGridPane().add(ug.getResolutionXLabel(), 7, 0);
+        ug.getGridPane().add(ug.getResolutionXTextField(), 7, 1);
+        ug.getGridPane().add(ug.getResolutionYLabel(), 8, 0);
+        ug.getGridPane().add(ug.getResolutionYTextField(), 8, 1);
 
         // Row 1
         ug.getGridPane().add(ug.getCenterXInput(), 0, 1);
@@ -147,12 +166,15 @@ public class UtilityGrid {
         // Button on last row
         ug.getGridPane().add(ug.getButton(), 0, 20);
         ug.getButton().addEventHandler(MouseEvent.MOUSE_CLICKED, event ->
-                updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height)))), stage));
+                updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate(
+                                (int) W2CCoords.width * GenConfig.Image.ResolutionX,
+                                (int) W2CCoords.height * GenConfig.Image.ResolutionY)))),
+                        stage));
 
         return ug;
     }
 
-    static void updateRootPaneBackground(ImageView imageView, Stage stage) {
+    public static void updateRootPaneBackground(ImageView imageView, Stage stage) {
         Window.rootPane.get().setBackground(new Background(new BackgroundImage(
                 imageView.getImage(),
                 BackgroundRepeat.NO_REPEAT,

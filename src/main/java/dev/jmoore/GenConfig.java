@@ -10,6 +10,7 @@ public class GenConfig {
     }
 
     public record Image() {
-        public static int Resolution = 2;
+        public static int ResolutionX = 1;
+        public static int ResolutionY = 1;
     }
 }
