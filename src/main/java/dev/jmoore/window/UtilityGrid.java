@@ -132,7 +132,7 @@ public class UtilityGrid {
         // Row 4
         ug.getGridPane().add(ug.getIsInSetLabel(), 0, 4);
         // Row 5
-        ug.getGridPane().add(ug.getIterationCountLabel(), 0, 5);
+        ug.getGridPane().add(ug.getIterationCountLabel(), 0, 5, 2, 1);
 
         // Style the labels
         ug.getGridPane().getChildren().stream()
