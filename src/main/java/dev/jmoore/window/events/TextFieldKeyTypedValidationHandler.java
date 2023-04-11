@@ -23,10 +23,9 @@ public class TextFieldKeyTypedValidationHandler implements EventHandler<KeyEvent
         for (char c : textField.getText().toCharArray())
             if (c == '.')
                 decimalCount++;
-        System.out.printf("Decimal count: %d%n", decimalCount);
 
         // Input validation
-        if ((input.equals(".") && decimalCount < 1) // ? Only one decimal point allowed
+        if ((allowDecimal && input.equals(".") && decimalCount < 1) // ? Only one decimal point allowed;
                 || (input.equals("\b") // ? Allow backspace
                 || input.equals("\u007F") // ? Allow delete
                 || input.equals("\t") // ? Allow tab
