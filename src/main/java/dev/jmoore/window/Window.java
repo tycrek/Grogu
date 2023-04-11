@@ -55,7 +55,10 @@ public class Window extends Application {
             try {
                 var xD = Double.parseDouble(xText);
                 var yD = Double.parseDouble(yText);
-                SimpleAlert.show("Valid input", String.format("Valid inputs: [%s, %s]", xText, yText));
+//                SimpleAlert.show("Valid input", String.format("Valid inputs: [%s, %s]", xText, yText));
+
+                W2CCoords.xScale = xD;
+                W2CCoords.yScale = yD;
             } catch (NumberFormatException e) {
                 if (!yText.equals("") && !xText.equals(""))
                     SimpleAlert.show("Invalid input", String.format("Invalid inputs: [%s, %s]%n%nOnly numbers (including decimals) are allowed.", xText, yText));

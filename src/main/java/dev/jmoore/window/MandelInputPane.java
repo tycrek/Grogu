@@ -1,9 +1,11 @@
 package dev.jmoore.window;
 
 import dev.jmoore.Grogu;
+import dev.jmoore.grid.W2CCoords;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import lombok.Getter;
 
@@ -16,11 +18,11 @@ public class MandelInputPane extends FlowPane {
         super(Orientation.HORIZONTAL, 4.0, 4.0);
 
         // Create the text field
-        textField = new TextField("0");
+        textField = new TextField(Double.toString(W2CCoords.xScale));
 
         // * Any key handler: handles input validation per character
-        textField.addEventHandler(javafx.scene.input.KeyEvent.KEY_TYPED, (event) -> {
-            var input = event.getCharacter();
+        textField.addEventHandler(KeyEvent.KEY_PRESSED, (event) -> {
+            var input = event.getText();
 
             // Check how many decimal points are in the text field
             int decimalCount = 0;
@@ -47,7 +49,7 @@ public class MandelInputPane extends FlowPane {
         });
 
         // * Axis label
-        var label = new Label(axis.name() + " Axis:");
+        var label = new Label(axis.name() + " Axis Scale:");
         label.setStyle("-fx-font-weight: bold");
 
         this.getChildren().addAll(label, textField);
