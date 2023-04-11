@@ -70,11 +70,9 @@ public class Window extends Application {
             W2CCoords.centerY = cartesian[1];
 
             // Update the image
-            System.out.println("Generating...");
             UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
-                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height)))), stage);
+                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, utilityGrid)))), stage);
             utilityGrid.getCenterXInput().fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "", "", null, false, false, false, false));
-            System.out.println("Done!");
         });
 
         scene.setOnScroll(event -> {
@@ -87,9 +85,6 @@ public class Window extends Application {
                 ? W2CCoords.yScale / SCALE_DIVISOR
                     : W2CCoords.yScale * SCALE_DIVISOR;
 
-            System.out.println("newScaleX: " + newScaleX);
-            System.out.println("newScaleY: " + newScaleY);
-
             // Update scale inputs
             utilityGrid.getScaleXInput().getTextField().setText(Double.toString(newScaleX));
             utilityGrid.getScaleYInput().getTextField().setText(Double.toString(newScaleY));
@@ -98,10 +93,8 @@ public class Window extends Application {
             W2CCoords.xScale = newScaleX;
             W2CCoords.yScale = newScaleY;
 
-            System.out.println("Generating...");
             UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
-                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height)))), stage);
-            System.out.println("Done!");
+                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, utilityGrid)))), stage);
         });
 
         //#endregion
@@ -135,7 +128,7 @@ public class Window extends Application {
 
         // Set the initial background
         UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
-                ImageGen.toInputStream(ImageGen.generate(Window.WIDTH, Window.HEIGHT)))), stage);
+                ImageGen.toInputStream(ImageGen.generate(Window.WIDTH, Window.HEIGHT, utilityGrid)))), stage);
 
         //#endregion
     }

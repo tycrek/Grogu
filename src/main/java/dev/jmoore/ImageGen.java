@@ -1,6 +1,7 @@
 package dev.jmoore;
 
 import dev.jmoore.grid.Window2Cartesian;
+import dev.jmoore.window.UtilityGrid;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -11,8 +12,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 public class ImageGen {
-    public static BufferedImage generate(int width, int height) {
+    public static BufferedImage generate(int width, int height, UtilityGrid ug) {
         var image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        var start = System.currentTimeMillis();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -23,12 +26,17 @@ public class ImageGen {
                 var mandelResult = Fractal.isInMandelbrotSet(properCoords[0], properCoords[1]);
 
                 int scaledValue = scaleIterationsToRgb(mandelResult.getIterations(), true); // convert to a scale of 0-255
+
                 int colour = mandelResult.isInMandelbrotSet()
                         ? rgb2hex(0, 0, 0)
                         : rgb2hex(255 - scaledValue * 5, 255 - scaledValue * 6, scaledValue * 7);
                 image.setRGB(x, y, colour);
             }
         }
+
+        var end = System.currentTimeMillis();
+        System.out.printf("Took %sms to generate image%n", end - start);
+        ug.getTimeTakenLabel().setText((String.format("Time taken: %sms", end - start)));
 
         return image;
     }

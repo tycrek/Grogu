@@ -53,6 +53,7 @@ public class UtilityGrid {
     // Mandelbrot labels
     private final Label isInSetLabel = new Label("Is in set: false");
     private final Label iterationCountLabel = new Label("Iteration count: 0");
+    private final Label timeTakenLabel = new Label("Time taken: 0ms");
 
     // GridPane & Button
     private final GridPane gridPane = new GridPane();
@@ -64,10 +65,8 @@ public class UtilityGrid {
         // Input handler
         final Runnable inputHandler = () -> {
             try {
-                System.out.println("Generating...");
                 parseDoubles(ug);
-                updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height)))), stage);
-                System.out.println("Done!");
+                updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, ug)))), stage);
             } catch (NumberFormatException e) {
                 System.err.println("Invalid input");
             }
@@ -133,6 +132,8 @@ public class UtilityGrid {
         ug.getGridPane().add(ug.getIsInSetLabel(), 0, 4);
         // Row 5
         ug.getGridPane().add(ug.getIterationCountLabel(), 0, 5, 2, 1);
+        // Row 6
+        ug.getGridPane().add(ug.getTimeTakenLabel(), 0, 6, 2, 1);
 
         // Style the labels
         ug.getGridPane().getChildren().stream()
