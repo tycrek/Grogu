@@ -1,6 +1,7 @@
 package dev.jmoore.window;
 
 import dev.jmoore.Fractal;
+import dev.jmoore.GenConfig;
 import dev.jmoore.Grogu;
 import dev.jmoore.ImageGen;
 import dev.jmoore.grid.W2CCoords;
@@ -15,16 +16,13 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lombok.val;
 
-import javax.imageio.ImageIO;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
@@ -104,10 +102,12 @@ public class Window extends Application {
                 .filter(node -> node instanceof Label)
                 .map(node -> (Label) node)
                 .forEach(label -> label.setStyle("-fx-font-weight: bold; -fx-text-fill: white;"));
-        inputGrid.add(w2cCoordsValueLabel, 1, 7);
-        // Row 8
-        inputGrid.add(w2cScaleLabel, 0, 8);
-        inputGrid.add(w2cScaleValueLabel, 1, 8);
+
+        // Button on last row
+        val button = new Button("Generate");
+        inputGrid.add(button, 0, 20);
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->
+            updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height)))), stage));
 
         // Overlaid cartesian range grid
         val cartesianRangeGrid = CartesianRangeGridPane.build();
@@ -143,8 +143,8 @@ public class Window extends Application {
         // Function to run both runnables and update the placeholder image, depending on the axis
         Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldSize, newSize) -> {
             updateCartesianConstraints.run();
-            if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue();
-            else if (axis == Grogu.Axis.Y) W2CCoords.height = newSize.doubleValue();
+            if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue() * GenConfig.Image.Resolution;
+            else if (axis == Grogu.Axis.Y) W2CCoords.height = newSize.doubleValue() * GenConfig.Image.Resolution;
         };
 
         // Add the listener
@@ -164,5 +164,20 @@ public class Window extends Application {
         stage.setOnCloseRequest(event -> System.exit(0));
 
         //#endregion
+    }
+
+    void updateRootPaneBackground(ImageView imageView, Stage stage) {
+        rootPane.get().setBackground(new Background(new BackgroundImage(
+                imageView.getImage(),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        stage.getWidth(),
+                        stage.getHeight(),
+                        false,
+                        false,
+                        false,
+                        false))));
     }
 }
