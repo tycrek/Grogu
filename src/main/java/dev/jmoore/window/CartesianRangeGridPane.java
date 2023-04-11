@@ -83,9 +83,9 @@ public class CartesianRangeGridPane {
         val maxY = Window2Cartesian.convert(0, 0);
 
         // Update the labels
-        topLabel.setText(String.format("%.2f", maxY[0]));
-        leftLabel.setText(String.format("%.2f", minX[1]));
-        rightLabel.setText(String.format("%.2f", maxX[0]));
-        bottomLabel.setText(String.format("%.2f", minY[1]));
+        topLabel.setText(String.format("%.6f", maxY[0]));
+        leftLabel.setText(String.format("%.6f", minX[1]));
+        rightLabel.setText(String.format("%.6f", maxX[0]));
+        bottomLabel.setText(String.format("%.6f", minY[1]));
     }
 }
