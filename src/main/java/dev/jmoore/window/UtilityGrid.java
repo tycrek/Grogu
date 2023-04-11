@@ -23,8 +23,8 @@ public class UtilityGrid {
 
     private final MandelInputPane scaleXInput = new MandelInputPane(Grogu.Axis.X, "Scale");
     private final MandelInputPane scaleYInput = new MandelInputPane(Grogu.Axis.Y, "Scale");
-    private final MandelInputPane centerXInput = new MandelInputPane(Grogu.Axis.X, "Center (not in use yet)");
-    private final MandelInputPane centerYInput = new MandelInputPane(Grogu.Axis.Y, "Center (not in use yet)");
+    private final MandelInputPane centerXInput = new MandelInputPane(Grogu.Axis.X, "Center");
+    private final MandelInputPane centerYInput = new MandelInputPane(Grogu.Axis.Y, "Center");
 
     // Fractal config labels
     private final Label fractalIterationsLabel = new Label("Iterations:");
@@ -63,38 +63,9 @@ public class UtilityGrid {
 
         // Input handler
         final Runnable inputHandler = () -> {
-            var xText = ug.getScaleXInput().getTextField().getText();
-            var yText = ug.getScaleYInput().getTextField().getText();
-            var xCenterText = ug.getCenterXInput().getTextField().getText();
-            var yCenterText = ug.getCenterYInput().getTextField().getText();
-
-            // Fractal config
-            var fractalIterationsText = ug.getFractalIterationsTextField().getText();
-            var fractalEscapeRadiusText = ug.getFractalEscapeRadiusTextField().getText();
-            var fractalZScaleText = ug.getFractalZScaleTextField().getText();
-            var fractalRealPartZText = ug.getFractalRealPartZTextField().getText();
-            var fractalImaginaryPartZText = ug.getFractalImaginaryPartZTextField().getText();
-            // Image config
-            var resolutionXText = ug.getResolutionXTextField().getText();
-            var resolutionYText = ug.getResolutionYTextField().getText();
-
             try {
-                W2CCoords.xScale = Double.parseDouble(xText);
-                W2CCoords.yScale = Double.parseDouble(yText);
-                W2CCoords.centerX = Double.parseDouble(xCenterText);
-                W2CCoords.centerY = Double.parseDouble(yCenterText);
-
-                // Fractal config
-                GenConfig.Fractal.Iterations = Integer.parseInt(fractalIterationsText);
-                GenConfig.Fractal.EscapeRadius = Double.parseDouble(fractalEscapeRadiusText);
-                GenConfig.Fractal.ZScale = Double.parseDouble(fractalZScaleText);
-                GenConfig.Fractal.RealPartZ = Double.parseDouble(fractalRealPartZText);
-                GenConfig.Fractal.ImaginaryPartZ = Double.parseDouble(fractalImaginaryPartZText);
-                // Image config
-                GenConfig.Image.ResolutionX = Integer.parseInt(resolutionXText);
-                GenConfig.Image.ResolutionY = Integer.parseInt(resolutionYText);
-
                 System.out.println("Generating...");
+                parseDoubles(ug);
                 updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height)))), stage);
                 System.out.println("Done!");
             } catch (NumberFormatException e) {
@@ -107,6 +78,7 @@ public class UtilityGrid {
         ug.getScaleYInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
         ug.getCenterXInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
         ug.getCenterYInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+
         // Fractal config
         ug.getFractalIterationsTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
         ug.getFractalIterationsTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalIterationsTextField(), false, false));
@@ -126,7 +98,9 @@ public class UtilityGrid {
 
         // Create the grid pane and add the nodes
         ug.getGridPane().setPadding(new Insets(16, 0, 0, 16));
-        ug.getGridPane().getColumnConstraints().addAll(new ColumnConstraints(220), new ColumnConstraints(220));
+        ug.getGridPane().getColumnConstraints().addAll(
+                new ColumnConstraints(100),
+                new ColumnConstraints(100));
         ug.getGridPane().setVgap(4);
         // Row 0
         ug.getGridPane().add(ug.getScaleXInput(), 0, 0);
@@ -154,7 +128,7 @@ public class UtilityGrid {
         // Row 2
         ug.getGridPane().add(ug.getMousePositionLabel(), 0, 2);
         // Row 3
-        ug.getGridPane().add(ug.getMousePositionCoordsLabel(), 0, 3);
+        ug.getGridPane().add(ug.getMousePositionCoordsLabel(), 0, 3, 2, 1);
         // Row 4
         ug.getGridPane().add(ug.getIsInSetLabel(), 0, 4);
         // Row 5
@@ -175,6 +149,38 @@ public class UtilityGrid {
                         stage));
 
         return ug;
+    }
+
+    public static void parseDoubles(UtilityGrid ug) {
+        var xText = ug.getScaleXInput().getTextField().getText();
+        var yText = ug.getScaleYInput().getTextField().getText();
+        var xCenterText = ug.getCenterXInput().getTextField().getText();
+        var yCenterText = ug.getCenterYInput().getTextField().getText();
+
+        // Fractal config
+        var fractalIterationsText = ug.getFractalIterationsTextField().getText();
+        var fractalEscapeRadiusText = ug.getFractalEscapeRadiusTextField().getText();
+        var fractalZScaleText = ug.getFractalZScaleTextField().getText();
+        var fractalRealPartZText = ug.getFractalRealPartZTextField().getText();
+        var fractalImaginaryPartZText = ug.getFractalImaginaryPartZTextField().getText();
+        // Image config
+        var resolutionXText = ug.getResolutionXTextField().getText();
+        var resolutionYText = ug.getResolutionYTextField().getText();
+
+        W2CCoords.xScale = Double.parseDouble(xText);
+        W2CCoords.yScale = Double.parseDouble(yText);
+        W2CCoords.centerX = Double.parseDouble(xCenterText);
+        W2CCoords.centerY = Double.parseDouble(yCenterText);
+
+        // Fractal config
+        GenConfig.Fractal.Iterations = Integer.parseInt(fractalIterationsText);
+        GenConfig.Fractal.EscapeRadius = Double.parseDouble(fractalEscapeRadiusText);
+        GenConfig.Fractal.ZScale = Double.parseDouble(fractalZScaleText);
+        GenConfig.Fractal.RealPartZ = Double.parseDouble(fractalRealPartZText);
+        GenConfig.Fractal.ImaginaryPartZ = Double.parseDouble(fractalImaginaryPartZText);
+        // Image config
+        GenConfig.Image.ResolutionX = Integer.parseInt(resolutionXText);
+        GenConfig.Image.ResolutionY = Integer.parseInt(resolutionYText);
     }
 
     public static void updateRootPaneBackground(ImageView imageView, Stage stage) {

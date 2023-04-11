@@ -20,6 +20,7 @@ public class MandelInputPane extends FlowPane {
 
         // Create the text field
         textField = new TextField(Double.toString(use.equals("Scale") ? W2CCoords.xScale : W2CCoords.centerX));
+        textField.setMaxWidth(80);
 
         // * Any key handler: handles input validation per character
         textField.addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(textField, true, true));

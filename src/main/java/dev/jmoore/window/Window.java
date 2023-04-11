@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import lombok.val;
@@ -54,6 +55,26 @@ public class Window extends Application {
             var mandelResult = Fractal.isInMandelbrotSet(cartesian[0], cartesian[1]);
             utilityGrid.getIsInSetLabel().setText(String.format("Is in set: %s", mandelResult.isInMandelbrotSet()));
             utilityGrid.getIterationCountLabel().setText(String.format("Iteration count: %s", mandelResult.getIterations()));
+        });
+
+        // Mouse CLICK listener
+        scene.setOnMouseClicked(event -> {
+            double[] cartesian = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
+
+            // Update center inputs
+            utilityGrid.getCenterXInput().getTextField().setText(Double.toString(cartesian[0]));
+            utilityGrid.getCenterYInput().getTextField().setText(Double.toString(cartesian[1]));
+
+            // Update W2CCoords
+            W2CCoords.centerX = cartesian[0];
+            W2CCoords.centerY = cartesian[1];
+
+            // Update the image
+            System.out.println("Generating...");
+            UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
+                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height)))), stage);
+            utilityGrid.getCenterXInput().fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "", "", null, false, false, false, false));
+            System.out.println("Done!");
         });
 
         //#endregion
