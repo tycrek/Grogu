@@ -2,6 +2,7 @@ package dev.jmoore;
 
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
+import dev.jmoore.window.CartesianRangeGridPane;
 import dev.jmoore.window.UtilityGrid;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -39,6 +40,8 @@ public class ImageGen {
         var end = System.currentTimeMillis();
         System.out.printf("Took %sms to generate image%n", end - start);
         ug.getTimeTakenLabel().setText((String.format("Time taken: %sms", end - start)));
+
+        CartesianRangeGridPane.updateCartesianLabels();
 
         return image;
     }

@@ -1,5 +1,7 @@
 package dev.jmoore.window;
 
+import dev.jmoore.grid.W2CCoords;
+import dev.jmoore.grid.Window2Cartesian;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -71,5 +73,19 @@ public class CartesianRangeGridPane {
         // Add the new constraints
         cartesianRangeGrid.getColumnConstraints().addAll(colConstraints, colConstraints, colConstraints);
         cartesianRangeGrid.getRowConstraints().addAll(rowConstraints, rowConstraints, rowConstraints);
+    }
+
+    public static void updateCartesianLabels() {
+        // Get min/max width/height
+        val minX = Window2Cartesian.convert(0, 0);
+        val maxX = Window2Cartesian.convert(W2CCoords.width, 0);
+        val minY = Window2Cartesian.convert(0, W2CCoords.height);
+        val maxY = Window2Cartesian.convert(0, 0);
+
+        // Update the labels
+        topLabel.setText(String.format("%.2f", maxY[0]));
+        leftLabel.setText(String.format("%.2f", minX[1]));
+        rightLabel.setText(String.format("%.2f", maxX[0]));
+        bottomLabel.setText(String.format("%.2f", minY[1]));
     }
 }
