@@ -10,6 +10,8 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
@@ -38,7 +40,6 @@ public class Window extends Application {
         val cartesianRangeGrid = CartesianRangeGridPane.build();
 
         StackPane ROOT = new StackPane(cartesianRangeGrid, utilityGrid.getGridPane());
-        ROOT.setBackground(Background.fill(Color.BLACK));
         rootPane.set(ROOT);
 
         // Primary scene
@@ -68,8 +69,8 @@ public class Window extends Application {
         // Function to run both runnables and update the placeholder image, depending on the axis
         Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldSize, newSize) -> {
             updateCartesianConstraints.run();
-            if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue() * GenConfig.Image.Resolution;
-            else if (axis == Grogu.Axis.Y) W2CCoords.height = newSize.doubleValue() * GenConfig.Image.Resolution;
+            if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue();
+            else if (axis == Grogu.Axis.Y) W2CCoords.height = newSize.doubleValue();
         };
 
         // Add the listener
@@ -87,6 +88,10 @@ public class Window extends Application {
 
         // For some reason this is required to close the application, it did it automatically at first so idk what happened
         stage.setOnCloseRequest(event -> System.exit(0));
+
+        // Set the initial background
+        UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
+                ImageGen.toInputStream(ImageGen.generate(Window.WIDTH, Window.HEIGHT)))), stage);
 
         //#endregion
     }
