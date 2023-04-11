@@ -6,11 +6,11 @@ import javafx.scene.control.DialogPane;
 
 public class SimpleAlert {
 
-    static void show(String title, String message) {
+    public static void show(String title, String message) {
         show(title, message, ButtonType.OK);
     }
 
-    static void show(String title, String message, ButtonType buttonType) {
+    public static void show(String title, String message, ButtonType buttonType) {
         var dialogPane = new DialogPane();
         var dialog = new Dialog<>();
 
