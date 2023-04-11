@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 public class TextFieldKeyTypedValidationHandler implements EventHandler<KeyEvent> {
 
     private final TextField textField;
+    private final boolean allowNegative;
+    private final boolean allowDecimal;
 
     @Override
     public void handle(KeyEvent event) {
@@ -30,6 +32,11 @@ public class TextFieldKeyTypedValidationHandler implements EventHandler<KeyEvent
                 || input.equals("\t") // ? Allow tab
                 || input.equals("\r") // ? Allow enter
                 || input.matches("[0-9]"))) // ? Allow numbers
+            return;
+
+        // Last-minute override checks
+        if ((input.equals("-") && allowNegative) // ? Allow negative numbers
+                || (input.equals(".") && allowDecimal)) // ? Allow decimals
             return;
 
         // Otherwise, block the event

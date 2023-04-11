@@ -4,6 +4,7 @@ import dev.jmoore.GenConfig;
 import dev.jmoore.Grogu;
 import dev.jmoore.ImageGen;
 import dev.jmoore.grid.W2CCoords;
+import dev.jmoore.window.events.TextFieldKeyTypedValidationHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -96,10 +97,15 @@ public class UtilityGrid {
         ug.getCenterYInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
         // Fractal config
         ug.getFractalIterationsTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalIterationsTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalIterationsTextField(), false, false));
         ug.getFractalEscapeRadiusTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalEscapeRadiusTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalEscapeRadiusTextField(), true, true));
         ug.getFractalZScaleTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalZScaleTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalZScaleTextField(), true, true));
         ug.getFractalRealPartZTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalRealPartZTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalRealPartZTextField(), true, true));
         ug.getFractalImaginaryPartZTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalImaginaryPartZTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalImaginaryPartZTextField(), true, true));
 
         // Create the grid pane and add the nodes
         ug.getGridPane().setPadding(new Insets(16, 0, 0, 16));

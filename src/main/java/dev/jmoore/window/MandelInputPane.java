@@ -22,7 +22,7 @@ public class MandelInputPane extends FlowPane {
         textField = new TextField(Double.toString(use.equals("Scale") ? W2CCoords.xScale : W2CCoords.centerX));
 
         // * Any key handler: handles input validation per character
-        textField.addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(textField));
+        textField.addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(textField, true, true));
 
         // * Axis label
         var label = new Label(String.format("%s Axis %s:", axis.name(), use));
