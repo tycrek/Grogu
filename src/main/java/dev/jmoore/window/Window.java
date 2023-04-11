@@ -79,7 +79,10 @@ public class Window extends Application {
         inputGrid.add(w2cScaleLabel, 0, 5);
         inputGrid.add(w2cScaleValueLabel, 1, 5);
 
-        StackPane ROOT = new StackPane(inputGrid);
+        // Overlaid cartesian range grid
+        val cartesianRangeGrid = CartesianRangeGridPane.build();
+
+        StackPane ROOT = new StackPane(inputGrid, cartesianRangeGrid);
 
         // Primary scene
         Scene scene = new Scene(ROOT, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
