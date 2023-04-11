@@ -34,5 +34,6 @@ Grogu is a character in the show The Mandalorian. Mandalorian -> Mandal. Mandal 
 ![image](https://user-images.githubusercontent.com/29926144/231070819-ac0a5e18-0483-4b65-8557-e7ed5a4cd1bf.png)
 ![image](https://user-images.githubusercontent.com/29926144/231071133-55c15a2c-9752-4037-ab7a-49de7de13584.png)
 ![image](https://user-images.githubusercontent.com/29926144/231111862-f69150ea-90c8-4550-9abf-85fcb556af54.png)
+![image](https://user-images.githubusercontent.com/29926144/231132828-0e30ab1b-e21e-467d-8a40-b7be86c946ab.png)
 
 ![image](https://user-images.githubusercontent.com/29926144/231106045-16d34362-09da-4662-9803-2fd354b997f3.png)
