@@ -25,7 +25,6 @@ public class CartesianRangeGridPane {
         // Create the grid
         val cartesianRangeGrid = new GridPane();
         cartesianRangeGrid.setAlignment(Pos.CENTER);
-        cartesianRangeGrid.setGridLinesVisible(true);
 
         // Add the labels
         cartesianRangeGrid.add(topLabel, 1, 0);
