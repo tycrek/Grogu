@@ -1,12 +1,15 @@
 package dev.jmoore.window;
 
 import dev.jmoore.Grogu;
+import dev.jmoore.grid.W2CCoords;
+import dev.jmoore.grid.Window2Cartesian;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -26,8 +29,11 @@ public class Window extends Application {
         //#region           UI setup
 
         // Mouse position label
-        val mousePositionLabel = new Label("Mouse position:");
+        val mousePositionLabel = new Label("Mouse position (window):");
         val mousePositionCoordsLabel = new Label("0x0");
+
+        val mouseCartesianPositionLabel = new Label("Mouse position (cartesian):");
+        val mouseCartesianPositionCoordsLabel = new Label("0x0");
 
         // W2CCoords labels
         val w2cSizeLabel = new Label("Window size:");
@@ -39,7 +45,7 @@ public class Window extends Application {
         val w2cScaleLabel = new Label("Cartesian scale:");
         val w2cScaleValueLabel = new Label("0x0");
 
-        val w2cClickedLabel = new Label("Clicked coordinates (screen):");
+        val w2cClickedLabel = new Label("Clicked coordinates (window):");
         val w2cClickedValueLabel = new Label("0x0");
 
         val w2cClickedCoordsLabel = new Label("Clicked coordinates (cartesian):");
@@ -53,12 +59,8 @@ public class Window extends Application {
             var xText = inputX.getTextField().getText();
             var yText = inputY.getTextField().getText();
             try {
-                var xD = Double.parseDouble(xText);
-                var yD = Double.parseDouble(yText);
-//                SimpleAlert.show("Valid input", String.format("Valid inputs: [%s, %s]", xText, yText));
-
-                W2CCoords.xScale = xD;
-                W2CCoords.yScale = yD;
+                W2CCoords.xScale = Double.parseDouble(xText);
+                W2CCoords.yScale = Double.parseDouble(yText);
             } catch (NumberFormatException e) {
                 if (!yText.equals("") && !xText.equals(""))
                     SimpleAlert.show("Invalid input", String.format("Invalid inputs: [%s, %s]%n%nOnly numbers (including decimals) are allowed.", xText, yText));
@@ -66,8 +68,8 @@ public class Window extends Application {
             }
         };
 
-        inputX.getTextField().setOnAction(event -> inputHandler.run());
-        inputY.getTextField().setOnAction(event -> inputHandler.run());
+        inputX.getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        inputY.getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
 
         // Create the grid pane and add the input panes
         val inputGrid = new GridPane();
@@ -85,17 +87,20 @@ public class Window extends Application {
         inputGrid.add(mousePositionLabel, 0, 3);
         inputGrid.add(mousePositionCoordsLabel, 1, 3);
         // Row 4
-        inputGrid.add(w2cClickedLabel, 0, 4);
-        inputGrid.add(w2cClickedValueLabel, 1, 4);
+        inputGrid.add(mouseCartesianPositionLabel, 0, 4);
+        inputGrid.add(mouseCartesianPositionCoordsLabel, 1, 4);
         // Row 5
-        inputGrid.add(w2cClickedCoordsLabel, 0, 5);
-        inputGrid.add(w2cClickedCoordsValueLabel, 1, 5);
+        inputGrid.add(w2cClickedLabel, 0, 5);
+        inputGrid.add(w2cClickedValueLabel, 1, 5);
         // Row 6
-        inputGrid.add(w2cCoordsLabel, 0, 6);
-        inputGrid.add(w2cCoordsValueLabel, 1, 6);
+        inputGrid.add(w2cClickedCoordsLabel, 0, 6);
+        inputGrid.add(w2cClickedCoordsValueLabel, 1, 6);
         // Row 7
-        inputGrid.add(w2cScaleLabel, 0, 7);
-        inputGrid.add(w2cScaleValueLabel, 1, 7);
+        inputGrid.add(w2cCoordsLabel, 0, 7);
+        inputGrid.add(w2cCoordsValueLabel, 1, 7);
+        // Row 8
+        inputGrid.add(w2cScaleLabel, 0, 8);
+        inputGrid.add(w2cScaleValueLabel, 1, 8);
 
         // Overlaid cartesian range grid
         val cartesianRangeGrid = CartesianRangeGridPane.build();
@@ -109,12 +114,23 @@ public class Window extends Application {
         scene.setOnMouseClicked(event -> {
             System.out.println("Mouse clicked: " + event.getSceneX() + ", " + event.getSceneY());
 
-            // Update ClickedLabel text
+            // Update ClickedValueLabel text
             w2cClickedValueLabel.setText(String.format("%sx%s", event.getSceneX(), event.getSceneY()));
+
+            // Update ClickedCoordsValueLabel text
+            double[] cartesianCoords = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
+            w2cClickedCoordsValueLabel.setText(String.format("%sx%s", cartesianCoords[0], cartesianCoords[1]));
         });
 
         // Mouse move listener
-        scene.setOnMouseMoved(event -> mousePositionCoordsLabel.setText(String.format("%sx%s", event.getSceneX(), event.getSceneY())));
+        scene.setOnMouseMoved(event -> {
+            // Update mousePositionCoordsLabel text
+            mousePositionCoordsLabel.setText(String.format("%sx%s", event.getSceneX(), event.getSceneY()));
+
+            // Update mouseCartesianPositionCoordsLabel text
+            double[] cartesianCoords = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
+            mouseCartesianPositionCoordsLabel.setText(String.format("%sx%s", cartesianCoords[0], cartesianCoords[1]));
+        });
 
         //#endregion
         //#region       Window resize operations
@@ -130,11 +146,16 @@ public class Window extends Application {
         Runnable updateCartesianConstraints = () -> CartesianRangeGridPane.updateConstraints(stage.getWidth(), stage.getHeight(), cartesianRangeGrid);
 
         // Function to run both runnables and update the placeholder image, depending on the axis
-        Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldVal, newVal) -> {
+        Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldSize, newSize) -> {
             updateW2CSize.run();
             updateCartesianConstraints.run();
-            if (axis == Grogu.Axis.X) placeholderUpdater.updateX(newVal.doubleValue());
-            else if (axis == Grogu.Axis.Y) placeholderUpdater.updateY(newVal.doubleValue());
+            if (axis == Grogu.Axis.X) {
+                placeholderUpdater.updateX(newSize.doubleValue());
+                W2CCoords.width = newSize.doubleValue();
+            } else if (axis == Grogu.Axis.Y) {
+                placeholderUpdater.updateY(newSize.doubleValue());
+                W2CCoords.height = newSize.doubleValue();
+            }
         };
 
         // Add the listener

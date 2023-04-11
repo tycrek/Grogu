@@ -21,8 +21,8 @@ public class MandelInputPane extends FlowPane {
         textField = new TextField(Double.toString(W2CCoords.xScale));
 
         // * Any key handler: handles input validation per character
-        textField.addEventHandler(KeyEvent.KEY_PRESSED, (event) -> {
-            var input = event.getText();
+        textField.addEventHandler(KeyEvent.KEY_TYPED, (event) -> {
+            var input = event.getCharacter();
 
             // Check how many decimal points are in the text field
             int decimalCount = 0;
