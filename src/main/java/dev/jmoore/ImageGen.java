@@ -33,6 +33,8 @@ public class ImageGen {
                 int colour = mandelResult.isInMandelbrotSet()
                         ? rgb2hex(0, 0, 0)
                         : rgb2hex(255 - scaledValue * 5, 255 - scaledValue * 6, scaledValue * 7);
+                        : rgb2hex(250 - scaledValue * 4, 10 + scaledValue * 2, scaledValue * 3);
+//                        : rgb2hex(255 - scaledValue * 5, 255 - scaledValue * 6, scaledValue * 7);
                 image.setRGB(x, y, colour);
             }
         }
