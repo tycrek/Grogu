@@ -12,7 +12,7 @@ public class Window2Cartesian {
         double sx = W2CCoords.xScale / W2CCoords.width; // pixel-to-Cartesian scale factor for x-axis
         double sy = W2CCoords.yScale / W2CCoords.height; // pixel-to-Cartesian scale factor for y-axis
 
-        // Calculate Cartesian coordinates of mouse cursor
+        // Calculate Cartesian coordinates
         double cartesianX = W2CCoords.cartesianCenterX + (x - W2CCoords.width / 2) * sx;
         double cartesianY = W2CCoords.cartesianCenterY - (y - W2CCoords.height / 2) * sy;
 
