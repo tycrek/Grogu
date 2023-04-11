@@ -12,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import lombok.Data;
@@ -140,14 +139,6 @@ public class UtilityGrid {
                 .filter(node -> node instanceof Label)
                 .map(node -> (Label) node)
                 .forEach(label -> label.setStyle("-fx-font-weight: bold; -fx-text-fill: white;"));
-
-        // Button on last row
-        ug.getGridPane().add(ug.getButton(), 0, 20);
-        ug.getButton().addEventHandler(MouseEvent.MOUSE_CLICKED, event ->
-                updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate(
-                                (int) W2CCoords.width * GenConfig.Image.ResolutionX,
-                                (int) W2CCoords.height * GenConfig.Image.ResolutionY)))),
-                        stage));
 
         return ug;
     }
