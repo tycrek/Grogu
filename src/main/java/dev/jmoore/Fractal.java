@@ -14,7 +14,7 @@ public class Fractal {
         while ((iteration < GenConfig.Fractal.Iterations)
                 && ((realPartZ * realPartZ) + (imaginaryPartZ * imaginaryPartZ) < GenConfig.Fractal.EscapeRadius)) {
             double nextRealPartZ = (realPartZ * realPartZ) - (imaginaryPartZ * imaginaryPartZ) + realPartC;
-            double nextImaginaryPartZ = 2.0 * (realPartZ * imaginaryPartZ) + imaginaryPartC;
+            double nextImaginaryPartZ = GenConfig.Fractal.ZScale * (realPartZ * imaginaryPartZ) + imaginaryPartC;
             realPartZ = nextRealPartZ;
             imaginaryPartZ = nextImaginaryPartZ;
             iteration++;
