@@ -2,6 +2,7 @@ package dev.jmoore.window;
 
 import dev.jmoore.Grogu;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
@@ -11,6 +12,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import lombok.val;
+
+import java.util.function.Function;
 
 public class Window extends Application {
 
@@ -94,22 +97,29 @@ public class Window extends Application {
         scene.setOnMouseMoved(event -> mousePositionCoordsLabel.setText(String.format("%sx%s", event.getSceneX(), event.getSceneY())));
 
         //#endregion
-        //#region       Placeholder image updater
+        //#region       Window resize operations
 
         // Window resize listener thread (updates the placeholder image)
         val placeholderUpdater = new PlaceholderUpdater(ROOT, WIDTH, HEIGHT);
         new Thread(placeholderUpdater, "PlaceholderUpdateThread").start();
 
-        // Stage property listeners
+        // Updates the Window size label
         Runnable updateW2CSize = () -> w2cSizeValueLabel.setText(String.format("%sx%s", stage.getWidth(), stage.getHeight()));
-        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+
+        // Updates the cartesian range grid constraints so the grid is always the same size as the window
+        Runnable updateCartesianConstraints = () -> CartesianRangeGridPane.updateConstraints(stage.getWidth(), stage.getHeight(), cartesianRangeGrid);
+
+        // Function to run both runnables and update the placeholder image, depending on the axis
+        Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldVal, newVal) -> {
             updateW2CSize.run();
-            placeholderUpdater.updateX(newVal.doubleValue());
-        });
-        stage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            updateW2CSize.run();
-            placeholderUpdater.updateY(newVal.doubleValue());
-        });
+            updateCartesianConstraints.run();
+            if (axis == Grogu.Axis.X) placeholderUpdater.updateX(newVal.doubleValue());
+            else if (axis == Grogu.Axis.Y) placeholderUpdater.updateY(newVal.doubleValue());
+        };
+
+        // Add the listener
+        stage.widthProperty().addListener(makeListener.apply(Grogu.Axis.X));
+        stage.heightProperty().addListener(makeListener.apply(Grogu.Axis.Y));
 
         //#endregion
         //#region       Stage setup

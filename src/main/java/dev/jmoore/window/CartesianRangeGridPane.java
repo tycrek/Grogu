@@ -45,7 +45,7 @@ public class CartesianRangeGridPane {
             GridPane.setValignment(child, VPos.CENTER);
 
             // Add padding
-            GridPane.setMargin(child, new Insets(16));
+            GridPane.setMargin(child, new Insets(20));
         });
 
         // Fix the positioning for the labels
