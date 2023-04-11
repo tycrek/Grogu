@@ -1,5 +1,6 @@
 package dev.jmoore;
 
+import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
 import dev.jmoore.window.UtilityGrid;
 import lombok.SneakyThrows;
@@ -20,8 +21,9 @@ public class ImageGen {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
 
-                double realPartC = (x) - (GenConfig.Image.ResolutionX / 2.0) * GenConfig.Fractal.ZScale;
-                double imaginaryPartC = (y) - (GenConfig.Image.ResolutionY / 2.0) * GenConfig.Fractal.ZScale;
+                // ? not actually sure if W2CCoords or GenConfig.Fractal.ZScale is correct
+                double realPartC = (x) - (GenConfig.Image.ResolutionX / 2.0) * W2CCoords.xScale/*GenConfig.Fractal.ZScale*/;
+                double imaginaryPartC = (y) - (GenConfig.Image.ResolutionY / 2.0) * W2CCoords.yScale/*GenConfig.Fractal.ZScale*/;
                 var properCoords = Window2Cartesian.convert(realPartC, imaginaryPartC);
                 var mandelResult = Fractal.isInMandelbrotSet(properCoords[0], properCoords[1]);
 
