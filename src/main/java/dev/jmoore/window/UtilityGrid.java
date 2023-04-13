@@ -69,8 +69,7 @@ public class UtilityGrid {
             try {
                 parseDoubles(ug);
 
-                // Only update image if key was TAB or ENTER
-                if (event.getCode().equals(KeyCode.TAB) || event.getCode().equals(KeyCode.ENTER))
+                if (event.getCode().equals(KeyCode.ENTER))
                     updateRootPaneBackground(ug, stage);
             } catch (NumberFormatException e) {
                 System.err.println("Invalid input");
