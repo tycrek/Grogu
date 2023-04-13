@@ -7,10 +7,17 @@ import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lombok.val;
 
@@ -28,10 +35,12 @@ public class Window extends Application {
 
         //#region           UI setup
 
-        // Utility grid
+        // Utility grid & bar
         val utilityGrid = UtilityGrid.build(stage);
+        val bar = buildBar(utilityGrid);
 
-        StackPane ROOT = new StackPane(utilityGrid.getGridPane());
+        StackPane ROOT = new StackPane(utilityGrid.getGridPane(), bar);
+        StackPane.setAlignment(bar, Pos.BOTTOM_CENTER);
         rootPane.set(ROOT);
 
         // Primary scene
@@ -60,8 +69,8 @@ public class Window extends Application {
             double[] cartesian = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
             W2CCoords.centerX = cartesian[0];
             W2CCoords.centerY = cartesian[1];
-            utilityGrid.getCenterXInput().getTextField().setText(Double.toString(W2CCoords.centerX));
-            utilityGrid.getCenterYInput().getTextField().setText(Double.toString(W2CCoords.centerY));
+            utilityGrid.getConfigureBox().getCenterXInput().getTextField().setText(Double.toString(W2CCoords.centerX));
+            utilityGrid.getConfigureBox().getCenterYInput().getTextField().setText(Double.toString(W2CCoords.centerY));
             UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
         });
 
@@ -71,8 +80,8 @@ public class Window extends Application {
 
             W2CCoords.xScale = rescaleOnScroll(event, Grogu.Axis.X);
             W2CCoords.yScale = rescaleOnScroll(event, Grogu.Axis.Y);
-            utilityGrid.getScaleXInput().getTextField().setText(Double.toString(W2CCoords.xScale));
-            utilityGrid.getScaleYInput().getTextField().setText(Double.toString(W2CCoords.yScale));
+            utilityGrid.getConfigureBox().getScaleXInput().getTextField().setText(Double.toString(W2CCoords.xScale));
+            utilityGrid.getConfigureBox().getScaleYInput().getTextField().setText(Double.toString(W2CCoords.yScale));
             UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
         });
 
@@ -108,6 +117,27 @@ public class Window extends Application {
         UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
 
         //#endregion
+    }
+
+    private HBox buildBar(UtilityGrid utilityGrid) {
+
+        // Add any nodes you want in your bar to the HBox
+        Label label = new Label("This is a bar!\nWith two lines hopefully");
+        label.setTextFill(Color.WHITE);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS); // Set the priority of the spacer to ALWAYS
+
+        // Buttons
+        Button configureButton = new Button("Configure");
+        configureButton.setOnAction(event -> utilityGrid.getConfigureBox().getChildWindow().show());
+
+        // Create an HBox to hold your bar
+        HBox bar = new HBox(label, spacer, configureButton);
+        bar.setStyle("-fx-background-color: #222; -fx-padding: 10px;");
+        bar.setMaxHeight(Region.USE_PREF_SIZE); // Set the maximum height to use preferred size
+
+        return bar;
     }
 
     private double rescaleOnScroll(ScrollEvent event, Grogu.Axis axis) {
