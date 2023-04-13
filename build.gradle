@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'dev.jmoore'
-version = '0.0.2-SNAPSHOT'
+version = '0.0.2'
 def JAVAFX_VERSION = '20'
 
 repositories {
