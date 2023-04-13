@@ -57,6 +57,7 @@ public class UtilityGrid {
     private final Label isInSetLabel = new Label("Is in set: false");
     private final Label iterationCountLabel = new Label("Iteration count: 0");
     private final Label timeTakenLabel = new Label("Time taken: 0ms");
+    private final Label generatingLabel = new Label("Generating...");
 
     // GridPane & Button
     private final GridPane gridPane = new GridPane();
@@ -139,12 +140,17 @@ public class UtilityGrid {
         ug.getGridPane().add(ug.getIterationCountLabel(), 0, 5, 2, 1);
         // Row 6
         ug.getGridPane().add(ug.getTimeTakenLabel(), 0, 6, 2, 1);
+        // Row 7
+        ug.getGridPane().add(ug.getGeneratingLabel(), 0, 7);
 
         // Style the labels
         ug.getGridPane().getChildren().stream()
                 .filter(node -> node instanceof Label)
                 .map(node -> (Label) node)
                 .forEach(label -> label.setStyle("-fx-font-weight: bold; -fx-text-fill: white;"));
+
+        // Override "Generating..." label style
+        ug.getGeneratingLabel().setStyle("-fx-font-weight: bold; -fx-text-fill: red; -fx-font-size: 16;");
 
         return ug;
     }
@@ -183,6 +189,7 @@ public class UtilityGrid {
 
     public static void updateRootPaneBackground(UtilityGrid ug, Stage stage) {
         Grogu.isGenerating.set(true);
+        ug.getGeneratingLabel().setVisible(true);
 
         // Generate the fractal asynchronously
         ImageGen.generateAsync((int) W2CCoords.width, (int) W2CCoords.height)
@@ -193,17 +200,18 @@ public class UtilityGrid {
 
                     // Update the labels
                     ug.getTimeTakenLabel().setText((String.format("Time taken: %sms", fractal.getDuration())));
+                    ug.getGeneratingLabel().setVisible(false);
 
                     // Set the background image
                     Window.rootPane.get().setBackground(new Background(new BackgroundImage(
                             new ImageView(new Image(ImageGen.toInputStream(fractal.getImage()))).getImage(),
                             BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(
-                        stage.getWidth(),
-                        stage.getHeight(),
-                        false,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundPosition.CENTER,
+                            new BackgroundSize(
+                                    stage.getWidth(),
+                                    stage.getHeight(),
+                                    false,
                                     false,
                                     false,
                                     false))));
