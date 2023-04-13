@@ -25,6 +25,7 @@ Grogu is a character in the show The Mandalorian. Mandalorian -> Mandal. Mandal 
   - [ ] Rotating 
 - [ ] Custom colour palettes (can be edited in source code at the moment)
 - [ ] Julia sets
+- [ ] Auto-iteration update
 - *This list is very early and non-exhaustive.*
 
 # Demo
