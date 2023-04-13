@@ -19,7 +19,7 @@ public class MandelInputPane extends FlowPane {
         super(Orientation.HORIZONTAL, 4.0, 4.0);
 
         // Create the text field
-        textField = new TextField(Double.toString(use.equals("Scale") ? W2CCoords.xScale : W2CCoords.centerX));
+        textField = new TextField(Double.toString(use.equals("Scale") ? (axis == Grogu.Axis.X ? W2CCoords.xScale : W2CCoords.yScale) : W2CCoords.centerX));
         textField.setMaxWidth(80);
 
         // * Any key handler: handles input validation per character
