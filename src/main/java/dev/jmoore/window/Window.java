@@ -13,6 +13,7 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import lombok.val;
@@ -73,22 +74,16 @@ public class Window extends Application {
             utilityGrid.getCenterXInput().fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "", "", null, false, false, false, false));
         });
 
+        // "Zoom" on scroll
         scene.setOnScroll(event -> {
-            // Get new scales
-            double newScaleX = Double.toString(event.getDeltaY()).contains("-")
-                ? W2CCoords.xScale / GenConfig.Image.ScaleFactor
-                    : W2CCoords.xScale * GenConfig.Image.ScaleFactor;
-            double newScaleY = Double.toString(event.getDeltaY()).contains("-")
-                ? W2CCoords.yScale / GenConfig.Image.ScaleFactor
-                    : W2CCoords.yScale * GenConfig.Image.ScaleFactor;
-
-            // Update scale inputs
-            utilityGrid.getScaleXInput().getTextField().setText(Double.toString(newScaleX));
-            utilityGrid.getScaleYInput().getTextField().setText(Double.toString(newScaleY));
 
             // Update W2CCoords
-            W2CCoords.xScale = newScaleX;
-            W2CCoords.yScale = newScaleY;
+            W2CCoords.xScale = rescaleOnScroll(event, Grogu.Axis.X);
+            W2CCoords.yScale = rescaleOnScroll(event, Grogu.Axis.Y);
+
+            // Update scale inputs
+            utilityGrid.getScaleXInput().getTextField().setText(Double.toString(W2CCoords.xScale));
+            utilityGrid.getScaleYInput().getTextField().setText(Double.toString(W2CCoords.yScale));
 
             UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
                     ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, utilityGrid)))), stage);
@@ -126,5 +121,12 @@ public class Window extends Application {
                 ImageGen.toInputStream(ImageGen.generate(Window.WIDTH, Window.HEIGHT, utilityGrid)))), stage);
 
         //#endregion
+    }
+
+    private double rescaleOnScroll(ScrollEvent event, Grogu.Axis axis) {
+        boolean isNegative = Double.toString(event.getDeltaY()).contains("-");
+        return axis == Grogu.Axis.X
+                ? isNegative ? W2CCoords.xScale * GenConfig.Image.ScaleFactor : W2CCoords.xScale / GenConfig.Image.ScaleFactor
+                : isNegative ? W2CCoords.yScale * GenConfig.Image.ScaleFactor : W2CCoords.yScale / GenConfig.Image.ScaleFactor;
     }
 }
