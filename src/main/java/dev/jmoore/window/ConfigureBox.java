@@ -50,14 +50,14 @@ public class ConfigureBox {
     private final Label resolutionXLabel = new Label("Resolution X:");
     private final Label resolutionYLabel = new Label("Resolution Y:");
 
-    public ConfigureBox(UtilityGrid ug, Stage parentStage) {
+    public ConfigureBox(Window window, Stage parentStage) {
 
         // Input handler
         final Consumer<KeyEvent> inputHandler = (event) -> {
             try {
                 parseDoubles(this);
                 if (event.getCode().equals(KeyCode.ENTER))
-                    UtilityGrid.updateRootPaneBackground(ug, parentStage);
+                    window.updateRootPaneBackground(parentStage);
             } catch (NumberFormatException e) {
                 System.err.println("Invalid input");
                 SimpleAlert.show("Invalid input", "Check your input and try again");

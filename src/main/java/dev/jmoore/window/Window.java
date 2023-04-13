@@ -3,23 +3,21 @@ package dev.jmoore.window;
 import dev.jmoore.Fractal;
 import dev.jmoore.GenConfig;
 import dev.jmoore.Grogu;
+import dev.jmoore.ImageGen;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import lombok.val;
+import lombok.Getter;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -29,18 +27,24 @@ public class Window extends Application {
     public final static int WIDTH = 800;
     public final static int HEIGHT = 600;
     public final static AtomicReference<StackPane> ROOT_PANE = new AtomicReference<>();
+    @Getter
+    private ConfigureBox configureBox;
+    @Getter
+    private BottomBar bottomBar;
 
     @Override
     public void start(Stage stage) {
+        // * JavaFX hierarchy: Stage -> Scene -> Pane -> Node(s)
 
         //#region           UI setup
 
-        // Utility grid & bar
-        val utilityGrid = UtilityGrid.build(stage);
-        val bar = buildBar(utilityGrid);
+        // Bottom bar & Configure box
+        bottomBar = new BottomBar(this);
+        configureBox = new ConfigureBox(this, stage);
 
-        StackPane rootPane = new StackPane(utilityGrid.getGridPane(), bar);
-        StackPane.setAlignment(bar, Pos.BOTTOM_CENTER);
+        // Primary pane
+        StackPane rootPane = new StackPane(bottomBar.getBar());
+        StackPane.setAlignment(bottomBar.getBar(), Pos.BOTTOM_CENTER);
         ROOT_PANE.set(rootPane);
 
         // Primary scene
@@ -51,14 +55,14 @@ public class Window extends Application {
             double[] cartesian = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
 
             // Update mouse position labels
-            utilityGrid.getMousePositionCoordsLabel().setText(String.format("X: (%s) %s%nY: (%s) %s",
+            bottomBar.getMousePositionLabel().setText(String.format("Mouse position:%nX: (%s) %s%nY: (%s) %s",
                     event.getSceneX(), cartesian[0],
                     event.getSceneY(), cartesian[1]));
 
             // Update Mandelbrot labels
             var mandelResult = Fractal.isInMandelbrotSet(cartesian[0], cartesian[1]);
-            utilityGrid.getIsInSetLabel().setText(String.format("Is in set: %s", mandelResult.isInMandelbrotSet()));
-            utilityGrid.getIterationCountLabel().setText(String.format("Iteration count: %s", mandelResult.getIterations()));
+            bottomBar.getIsInSetLabel().setText(String.format("Is in set:%n%s", mandelResult.isInMandelbrotSet()));
+            bottomBar.getIterationCountLabel().setText(String.format("Iteration count:%n%s", mandelResult.getIterations()));
         });
 
         // Mouse CLICK listener
@@ -69,9 +73,9 @@ public class Window extends Application {
             double[] cartesian = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
             W2CCoords.centerX = cartesian[0];
             W2CCoords.centerY = cartesian[1];
-            utilityGrid.getConfigureBox().getCenterXInput().getTextField().setText(Double.toString(W2CCoords.centerX));
-            utilityGrid.getConfigureBox().getCenterYInput().getTextField().setText(Double.toString(W2CCoords.centerY));
-            UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
+            configureBox.getCenterXInput().getTextField().setText(Double.toString(W2CCoords.centerX));
+            configureBox.getCenterYInput().getTextField().setText(Double.toString(W2CCoords.centerY));
+            updateRootPaneBackground(stage);
         });
 
         // "Zoom" on scroll
@@ -80,9 +84,9 @@ public class Window extends Application {
 
             W2CCoords.xScale = rescaleOnScroll(event, Grogu.Axis.X);
             W2CCoords.yScale = rescaleOnScroll(event, Grogu.Axis.Y);
-            utilityGrid.getConfigureBox().getScaleXInput().getTextField().setText(Double.toString(W2CCoords.xScale));
-            utilityGrid.getConfigureBox().getScaleYInput().getTextField().setText(Double.toString(W2CCoords.yScale));
-            UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
+            configureBox.getScaleXInput().getTextField().setText(Double.toString(W2CCoords.xScale));
+            configureBox.getScaleYInput().getTextField().setText(Double.toString(W2CCoords.yScale));
+            updateRootPaneBackground(stage);
         });
 
         //#endregion
@@ -92,7 +96,7 @@ public class Window extends Application {
         Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldSize, newSize) -> {
             if (Grogu.isGenerating.get()) return;
 
-            UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
+            updateRootPaneBackground(stage);
             if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue();
             else if (axis == Grogu.Axis.Y) W2CCoords.height = newSize.doubleValue();
         };
@@ -114,30 +118,40 @@ public class Window extends Application {
         stage.setOnCloseRequest(event -> System.exit(0));
 
         // Set the initial background
-        UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
+        updateRootPaneBackground(stage);
 
         //#endregion
     }
 
-    private HBox buildBar(UtilityGrid utilityGrid) {
+    public void updateRootPaneBackground(Stage stage) {
+        Grogu.isGenerating.set(true);
+        bottomBar.getGeneratingLabel().setVisible(true);
 
-        // Add any nodes you want in your bar to the HBox
-        Label label = new Label("This is a bar!\nWith two lines hopefully");
-        label.setTextFill(Color.WHITE);
+        // Generate the fractal asynchronously
+        ImageGen.generateAsync((int) W2CCoords.width, (int) W2CCoords.height)
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS); // Set the priority of the spacer to ALWAYS
+                // * Platform.runLater() is required to update the UI from a different thread
+                .thenAccept(fractal -> Platform.runLater(() -> {
+                    Grogu.isGenerating.set(false);
 
-        // Buttons
-        Button configureButton = new Button("Configure");
-        configureButton.setOnAction(event -> utilityGrid.getConfigureBox().getChildWindow().show());
+                    // Update the labels
+                    bottomBar.getTimeTakenLabel().setText((String.format("Time taken:%n%sms", fractal.getDuration())));
+                    bottomBar.getGeneratingLabel().setVisible(false);
 
-        // Create an HBox to hold your bar
-        HBox bar = new HBox(label, spacer, configureButton);
-        bar.setStyle("-fx-background-color: #222; -fx-padding: 10px;");
-        bar.setMaxHeight(Region.USE_PREF_SIZE); // Set the maximum height to use preferred size
-
-        return bar;
+                    // Set the background image
+                    Window.ROOT_PANE.get().setBackground(new Background(new BackgroundImage(
+                            new ImageView(new Image(ImageGen.toInputStream(fractal.getImage()))).getImage(),
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundPosition.CENTER,
+                            new BackgroundSize(
+                                    stage.getWidth(),
+                                    stage.getHeight(),
+                                    false,
+                                    false,
+                                    false,
+                                    false))));
+                }));
     }
 
     private double rescaleOnScroll(ScrollEvent event, Grogu.Axis axis) {
