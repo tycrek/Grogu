@@ -71,7 +71,7 @@ public class UtilityGrid {
 
                 // Only update image if key was TAB or ENTER
                 if (event.getCode().equals(KeyCode.TAB) || event.getCode().equals(KeyCode.ENTER))
-                    updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, ug)))), stage);
+                    updateRootPaneBackground(ug, stage);
             } catch (NumberFormatException e) {
                 System.err.println("Invalid input");
             }

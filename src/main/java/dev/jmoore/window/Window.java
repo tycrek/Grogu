@@ -3,16 +3,12 @@ package dev.jmoore.window;
 import dev.jmoore.Fractal;
 import dev.jmoore.GenConfig;
 import dev.jmoore.Grogu;
-import dev.jmoore.ImageGen;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -58,35 +54,22 @@ public class Window extends Application {
 
         // Mouse CLICK listener
         scene.setOnMouseClicked(event -> {
+            // Convert to cartesian coordinates
             double[] cartesian = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
-
-            // Update center inputs
-            utilityGrid.getCenterXInput().getTextField().setText(Double.toString(cartesian[0]));
-            utilityGrid.getCenterYInput().getTextField().setText(Double.toString(cartesian[1]));
-
-            // Update W2CCoords
             W2CCoords.centerX = cartesian[0];
             W2CCoords.centerY = cartesian[1];
-
-            // Update the image
-            UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
-                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, utilityGrid)))), stage);
-            utilityGrid.getCenterXInput().fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "", "", null, false, false, false, false));
+            utilityGrid.getCenterXInput().getTextField().setText(Double.toString(W2CCoords.centerX));
+            utilityGrid.getCenterYInput().getTextField().setText(Double.toString(W2CCoords.centerY));
+            UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
         });
 
         // "Zoom" on scroll
         scene.setOnScroll(event -> {
-
-            // Update W2CCoords
             W2CCoords.xScale = rescaleOnScroll(event, Grogu.Axis.X);
             W2CCoords.yScale = rescaleOnScroll(event, Grogu.Axis.Y);
-
-            // Update scale inputs
             utilityGrid.getScaleXInput().getTextField().setText(Double.toString(W2CCoords.xScale));
             utilityGrid.getScaleYInput().getTextField().setText(Double.toString(W2CCoords.yScale));
-
-            UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
-                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, utilityGrid)))), stage);
+            UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
         });
 
         //#endregion
@@ -94,8 +77,7 @@ public class Window extends Application {
 
         // Long story here, todo: update this comment
         Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldSize, newSize) -> {
-            UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
-                    ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, utilityGrid)))), stage);
+            UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
             if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue();
             else if (axis == Grogu.Axis.Y) W2CCoords.height = newSize.doubleValue();
         };
@@ -117,8 +99,7 @@ public class Window extends Application {
         stage.setOnCloseRequest(event -> System.exit(0));
 
         // Set the initial background
-        UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
-                ImageGen.toInputStream(ImageGen.generate(Window.WIDTH, Window.HEIGHT, utilityGrid)))), stage);
+        UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
 
         //#endregion
     }
