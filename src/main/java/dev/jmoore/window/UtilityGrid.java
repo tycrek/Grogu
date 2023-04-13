@@ -84,7 +84,7 @@ public class UtilityGrid {
                     ug.getGeneratingLabel().setVisible(false);
 
                     // Set the background image
-                    Window.rootPane.get().setBackground(new Background(new BackgroundImage(
+                    Window.ROOT_PANE.get().setBackground(new Background(new BackgroundImage(
                             new ImageView(new Image(ImageGen.toInputStream(fractal.getImage()))).getImage(),
                             BackgroundRepeat.NO_REPEAT,
                             BackgroundRepeat.NO_REPEAT,

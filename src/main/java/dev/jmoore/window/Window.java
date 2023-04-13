@@ -28,7 +28,7 @@ public class Window extends Application {
 
     public final static int WIDTH = 800;
     public final static int HEIGHT = 600;
-    public final static AtomicReference<StackPane> rootPane = new AtomicReference<>();
+    public final static AtomicReference<StackPane> ROOT_PANE = new AtomicReference<>();
 
     @Override
     public void start(Stage stage) {
@@ -39,12 +39,12 @@ public class Window extends Application {
         val utilityGrid = UtilityGrid.build(stage);
         val bar = buildBar(utilityGrid);
 
-        StackPane ROOT = new StackPane(utilityGrid.getGridPane(), bar);
+        StackPane rootPane = new StackPane(utilityGrid.getGridPane(), bar);
         StackPane.setAlignment(bar, Pos.BOTTOM_CENTER);
-        rootPane.set(ROOT);
+        ROOT_PANE.set(rootPane);
 
         // Primary scene
-        Scene scene = new Scene(ROOT, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
+        Scene scene = new Scene(rootPane, WIDTH, HEIGHT, true, SceneAntialiasing.BALANCED);
 
         // Mouse MOVE listener
         scene.setOnMouseMoved(event -> {
