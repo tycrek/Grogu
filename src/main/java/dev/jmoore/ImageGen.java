@@ -24,6 +24,8 @@ public class ImageGen {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
 
+                // Subtract from X and Y to center the image
+                // todo: make this a config option and play with it more
                 double realPartC = (x) - (GenConfig.Image.ResolutionX / 2.0) * W2CCoords.xScale;
                 double imaginaryPartC = (y) - (GenConfig.Image.ResolutionY / 2.0) * W2CCoords.yScale;
                 var properCoords = Window2Cartesian.convert(realPartC, imaginaryPartC);
