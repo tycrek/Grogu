@@ -32,7 +32,8 @@ public class ImageGen {
                 int scaledValue = scaleIterationsToRgb(mandelResult.getIterations(), true); // convert to a scale of 0-255
 
                 int colour = mandelResult.isInMandelbrotSet()
-                        ? rgb2hex(0, 0, 0)
+                        //? rgb2hex(0, 0, 0)
+                        ? 0xFFFFFF
                         : HSLGen.generateColor(x, y, scaledValue);
                 //: rgb2hex(255 - scaledValue * 5, 255 - scaledValue * 6, scaledValue * 7);
                 image.setRGB(x, y, colour);
