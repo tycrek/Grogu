@@ -11,11 +11,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import lombok.Data;
 import lombok.val;
+
+import java.util.function.Consumer;
 
 @Data
 public class UtilityGrid {
@@ -62,36 +65,39 @@ public class UtilityGrid {
         val ug = new UtilityGrid();
 
         // Input handler
-        final Runnable inputHandler = () -> {
+        final Consumer<KeyEvent> inputHandler = (event) -> {
             try {
                 parseDoubles(ug);
-                updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, ug)))), stage);
+
+                // Only update image if key was TAB or ENTER
+                if (event.getCode().equals(KeyCode.TAB) || event.getCode().equals(KeyCode.ENTER))
+                    updateRootPaneBackground(new ImageView(new Image(ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, ug)))), stage);
             } catch (NumberFormatException e) {
                 System.err.println("Invalid input");
             }
         };
 
         // Add event handlers to the input panes
-        ug.getScaleXInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
-        ug.getScaleYInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
-        ug.getCenterXInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
-        ug.getCenterYInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getScaleXInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
+        ug.getScaleYInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
+        ug.getCenterXInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
+        ug.getCenterYInput().getTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
 
         // Fractal config
-        ug.getFractalIterationsTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalIterationsTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
         ug.getFractalIterationsTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalIterationsTextField(), false, false));
-        ug.getFractalEscapeRadiusTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalEscapeRadiusTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
         ug.getFractalEscapeRadiusTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalEscapeRadiusTextField(), true, true));
-        ug.getFractalZScaleTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalZScaleTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
         ug.getFractalZScaleTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalZScaleTextField(), true, true));
-        ug.getFractalRealPartZTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalRealPartZTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
         ug.getFractalRealPartZTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalRealPartZTextField(), true, true));
-        ug.getFractalImaginaryPartZTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getFractalImaginaryPartZTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
         ug.getFractalImaginaryPartZTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getFractalImaginaryPartZTextField(), true, true));
         // Image config
-        ug.getResolutionXTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getResolutionXTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
         ug.getResolutionXTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getResolutionXTextField(), false, false));
-        ug.getResolutionYTextField().addEventHandler(KeyEvent.KEY_RELEASED, event -> inputHandler.run());
+        ug.getResolutionYTextField().addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
         ug.getResolutionYTextField().addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(ug.getResolutionYTextField(), false, false));
 
         // Create the grid pane and add the nodes
