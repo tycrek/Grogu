@@ -54,6 +54,8 @@ public class Window extends Application {
 
         // Mouse CLICK listener
         scene.setOnMouseClicked(event -> {
+            if (Grogu.isGenerating.get()) return;
+
             // Convert to cartesian coordinates
             double[] cartesian = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
             W2CCoords.centerX = cartesian[0];
@@ -65,6 +67,8 @@ public class Window extends Application {
 
         // "Zoom" on scroll
         scene.setOnScroll(event -> {
+            if (Grogu.isGenerating.get()) return;
+
             W2CCoords.xScale = rescaleOnScroll(event, Grogu.Axis.X);
             W2CCoords.yScale = rescaleOnScroll(event, Grogu.Axis.Y);
             utilityGrid.getScaleXInput().getTextField().setText(Double.toString(W2CCoords.xScale));
@@ -77,6 +81,8 @@ public class Window extends Application {
 
         // Long story here, todo: update this comment
         Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldSize, newSize) -> {
+            if (Grogu.isGenerating.get()) return;
+
             UtilityGrid.updateRootPaneBackground(utilityGrid, stage);
             if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue();
             else if (axis == Grogu.Axis.Y) W2CCoords.height = newSize.doubleValue();

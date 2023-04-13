@@ -5,6 +5,7 @@ import dev.jmoore.Grogu;
 import dev.jmoore.ImageGen;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.window.events.TextFieldKeyTypedValidationHandler;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -180,18 +181,32 @@ public class UtilityGrid {
         GenConfig.Image.ResolutionY = Integer.parseInt(resolutionYText);
     }
 
-    public static void updateRootPaneBackground(ImageView imageView, Stage stage) {
-        Window.rootPane.get().setBackground(new Background(new BackgroundImage(
-                imageView.getImage(),
-                BackgroundRepeat.NO_REPEAT,
+    public static void updateRootPaneBackground(UtilityGrid ug, Stage stage) {
+        Grogu.isGenerating.set(true);
+
+        // Generate the fractal asynchronously
+        ImageGen.generateAsync((int) W2CCoords.width, (int) W2CCoords.height)
+
+                // * Platform.runLater() is required to update the UI from a different thread
+                .thenAccept(fractal -> Platform.runLater(() -> {
+                    Grogu.isGenerating.set(false);
+
+                    // Update the labels
+                    ug.getTimeTakenLabel().setText((String.format("Time taken: %sms", fractal.getDuration())));
+
+                    // Set the background image
+                    Window.rootPane.get().setBackground(new Background(new BackgroundImage(
+                            new ImageView(new Image(ImageGen.toInputStream(fractal.getImage()))).getImage(),
+                            BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
                 new BackgroundSize(
                         stage.getWidth(),
                         stage.getHeight(),
                         false,
-                        false,
-                        false,
-                        false))));
+                                    false,
+                                    false,
+                                    false))));
+                }));
     }
 }

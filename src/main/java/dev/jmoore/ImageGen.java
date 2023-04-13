@@ -3,7 +3,8 @@ package dev.jmoore;
 import dev.jmoore.color.HSLGen;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
-import dev.jmoore.window.UtilityGrid;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -12,9 +13,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 
 public class ImageGen {
-    public static BufferedImage generate(int width, int height, UtilityGrid ug) {
+    public static FractalImage generate(int width, int height) {
         var image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         var start = System.currentTimeMillis();
@@ -22,28 +24,31 @@ public class ImageGen {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
 
-                // ? not actually sure if W2CCoords or GenConfig.Fractal.ZScale is correct
-                double realPartC = (x) - (GenConfig.Image.ResolutionX / 2.0) * W2CCoords.xScale/*GenConfig.Fractal.ZScale*/;
-                double imaginaryPartC = (y) - (GenConfig.Image.ResolutionY / 2.0) * W2CCoords.yScale/*GenConfig.Fractal.ZScale*/;
+                double realPartC = (x) - (GenConfig.Image.ResolutionX / 2.0) * W2CCoords.xScale;
+                double imaginaryPartC = (y) - (GenConfig.Image.ResolutionY / 2.0) * W2CCoords.yScale;
                 var properCoords = Window2Cartesian.convert(realPartC, imaginaryPartC);
                 var mandelResult = Fractal.isInMandelbrotSet(properCoords[0], properCoords[1]);
 
-                int scaledValue = scaleIterationsToRgb(mandelResult.getIterations(), true); // convert to a scale of 0-255
+                // Convert to a normalized scale of 0-255
+                int iterations = scaleIterationsToRgb(mandelResult.getIterations(), true);
 
                 int colour = mandelResult.isInMandelbrotSet()
                         //? rgb2hex(0, 0, 0)
                         ? 0xFFFFFF
-                        : HSLGen.generateColor(x, y, scaledValue);
-                //: rgb2hex(255 - scaledValue * 5, 255 - scaledValue * 6, scaledValue * 7);
+                        : HSLGen.generateColor(x, y, iterations);
+                //: rgb2hex(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
                 image.setRGB(x, y, colour);
             }
         }
 
         var end = System.currentTimeMillis();
         System.out.printf("Took %sms to generate image%n", end - start);
-        ug.getTimeTakenLabel().setText((String.format("Time taken: %sms", end - start)));
 
-        return image;
+        return new FractalImage(image, end - start);
+    }
+
+    public static CompletableFuture<FractalImage> generateAsync(int width, int height) {
+        return CompletableFuture.supplyAsync(() -> generate(width, height));
     }
 
     public static int rgb2hex(int r, int g, int b) {
@@ -64,5 +69,12 @@ public class ImageGen {
         val os = new ByteArrayOutputStream();
         ImageIO.write(image, "png", os);
         return new ByteArrayInputStream(os.toByteArray());
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class FractalImage {
+        private final BufferedImage image;
+        private final long duration;
     }
 }
