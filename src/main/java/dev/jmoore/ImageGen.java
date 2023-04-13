@@ -1,5 +1,6 @@
 package dev.jmoore;
 
+import dev.jmoore.color.HSLGen;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
 import dev.jmoore.window.CartesianRangeGridPane;
@@ -32,7 +33,8 @@ public class ImageGen {
 
                 int colour = mandelResult.isInMandelbrotSet()
                         ? rgb2hex(0, 0, 0)
-                        : rgb2hex(255 - scaledValue * 5, 255 - scaledValue * 6, scaledValue * 7);
+                        : HSLGen.generateColor(x, y, scaledValue);
+                //: rgb2hex(255 - scaledValue * 5, 255 - scaledValue * 6, scaledValue * 7);
                 image.setRGB(x, y, colour);
             }
         }
