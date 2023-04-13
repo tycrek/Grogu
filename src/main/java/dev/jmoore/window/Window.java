@@ -34,10 +34,7 @@ public class Window extends Application {
         // Utility grid
         val utilityGrid = UtilityGrid.build(stage);
 
-        // Overlaid cartesian range grid
-        val cartesianRangeGrid = CartesianRangeGridPane.build();
-
-        StackPane ROOT = new StackPane(cartesianRangeGrid, utilityGrid.getGridPane());
+        StackPane ROOT = new StackPane(utilityGrid.getGridPane());
         rootPane.set(ROOT);
 
         // Primary scene
@@ -100,12 +97,8 @@ public class Window extends Application {
         //#endregion
         //#region       Window resize operations
 
-        // Updates the cartesian range grid constraints so the grid is always the same size as the window
-        Runnable updateCartesianConstraints = () -> CartesianRangeGridPane.updateConstraints(stage.getWidth(), stage.getHeight(), cartesianRangeGrid);
-
-        // Function to run both runnables and update the placeholder image, depending on the axis
+        // Long story here, todo: update this comment
         Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldSize, newSize) -> {
-            updateCartesianConstraints.run();
             UtilityGrid.updateRootPaneBackground(new ImageView(new Image(
                     ImageGen.toInputStream(ImageGen.generate((int) W2CCoords.width, (int) W2CCoords.height, utilityGrid)))), stage);
             if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue();
