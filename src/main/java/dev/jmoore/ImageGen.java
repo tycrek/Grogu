@@ -1,5 +1,6 @@
 package dev.jmoore;
 
+import dev.jmoore.color.HSLGen;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
 import lombok.Getter;
@@ -37,11 +38,11 @@ public class ImageGen {
                 // Convert to a normalized scale of 0-255
                 int iterations = scaleIterationsToRgb(mandelResult.getIterations(), true);
 
-                pixels[x + y * width] = mandelResult.isInMandelbrotSet()
-                        //? rgb2hex(0, 0, 0)
-                        ? 0xFFFFFF
-                        //: HSLGen.generateColor(x, y, iterations);
-                        : rgb2hex(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
+                // Set the pixel
+                pixels[x + y * width] = getColourByMode(
+                        GenConfig.Image.Mode,
+                        mandelResult.isInMandelbrotSet(),
+                        width, height, x, y, iterations);
             }
         }
 
@@ -56,6 +57,16 @@ public class ImageGen {
 
     public static CompletableFuture<FractalImage> generateAsync(int width, int height) {
         return CompletableFuture.supplyAsync(() -> generate(width, height));
+    }
+
+    public static int getColourByMode(ImageGen.Mode mode, boolean isInSet, int width, int height, int x, int y, int iterations) {
+        // * Future tycrek: this CANNOT be ternary operators, it's too messy
+        if (isInSet)
+            return 0xFFFFFF;
+        return switch (mode) {
+            case HSL_REGULAR, HSL_INVERTED, HSL_INVERTED_2, HSL_REGULAR_2 -> HSLGen.generateColor(x, y, iterations);
+            case RGB_Tycrek_1 -> rgb2hex(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
+        };
     }
 
     public static int rgb2hex(int r, int g, int b) {

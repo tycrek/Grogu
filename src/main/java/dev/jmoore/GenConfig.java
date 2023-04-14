@@ -13,6 +13,7 @@ public class GenConfig {
         public static int ResolutionX = 1;
         public static int ResolutionY = 1;
         public static double ScaleFactor = 2.0;
+        public static ImageGen.Mode Mode = ImageGen.Mode.RGB_Tycrek_1;
         public static float Saturation = 0.7f;
     }
 }
