@@ -18,11 +18,13 @@ Grogu is a character in the show The Mandalorian. Mandalorian -> Mandal. Mandal 
 
 - [x] Generate a Mandelbrot!
 - [x] More options to tweak generation
+- [ ] Increase calculation precision
+- [ ] Multithreaded calculations
 - [ ] Save to image file
 - [ ] Interactivity
-  - [x] Zooming 
+  - [x] Zooming
   - [x] Re-positioning
-  - [ ] Rotating 
+  - [ ] Rotating
 - [ ] Custom colour palettes (can be edited in source code at the moment)
 - [ ] Julia sets
 - [ ] Auto-iteration update
