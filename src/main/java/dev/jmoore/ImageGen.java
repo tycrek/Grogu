@@ -78,6 +78,36 @@ public class ImageGen {
         return new ByteArrayInputStream(os.toByteArray());
     }
 
+    /**
+     * Image generation modes
+     */
+    public enum Mode {
+        /**
+         * HSL mode with WHITE outer layers, and a BLACK Mandelbrot set
+         */
+        HSL_REGULAR,
+
+        /**
+         * HSL mode with BLACK outer layers, and a WHITE Mandelbrot set
+         */
+        HSL_INVERTED,
+
+        /**
+         * HSL mode with BLACK outer layers, and a BLACK Mandelbrot set
+         */
+        HSL_INVERTED_2,
+
+        /**
+         * HSL mode with WHITE outer layers, and a WHITE Mandelbrot set
+         */
+        HSL_REGULAR_2,
+
+        /**
+         * RGB mode, my first attempt at a color scheme
+         */
+        RGB_Tycrek_1,
+    }
+
     @Getter
     @RequiredArgsConstructor
     public static class FractalImage {
