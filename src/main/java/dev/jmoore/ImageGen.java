@@ -3,6 +3,9 @@ package dev.jmoore;
 import dev.jmoore.color.HSLGen;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.WritableImage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -17,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ImageGen {
     public static FractalImage generate(int width, int height) {
-        var image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        var image = new WritableImage(width, height);
 
         var start = System.currentTimeMillis();
 
@@ -46,8 +49,8 @@ public class ImageGen {
             }
         }
 
-        // Set the pixels all at once (significantly faster than setRGB within the loop)
-        image.setRGB(0, 0, width, height, pixels, 0, width);
+        // Set the pixels all at once
+        image.getPixelWriter().setPixels(0, 0, width, height, PixelFormat.getIntArgbPreInstance(), pixels, 0, width);
 
         var end = System.currentTimeMillis();
         System.out.printf("Took %sms to generate image%n", end - start);
@@ -62,15 +65,24 @@ public class ImageGen {
     public static int getColourByMode(ImageGen.Mode mode, boolean isInSet, int width, int height, int x, int y, int iterations) {
         // * Future tycrek: this CANNOT be ternary operators, it's too messy
         if (isInSet)
-            return 0xFFFFFF;
+            return rgb2argb(0, 0, 0);
         return switch (mode) {
-            case HSL_REGULAR, HSL_INVERTED, HSL_INVERTED_2, HSL_REGULAR_2 -> HSLGen.generateColor(x, y, iterations);
-            case RGB_Tycrek_1 -> rgb2hex(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
+            case HSL_REGULAR, HSL_INVERTED, HSL_INVERTED_2, HSL_REGULAR_2 ->
+                    hex2argb(HSLGen.generateColor(x, y, iterations));
+            case RGB_Tycrek_1 -> rgb2argb(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
         };
     }
 
     public static int rgb2hex(int r, int g, int b) {
         return (r << 16) | (g << 8) | b;
+    }
+
+    public static int rgb2argb(int r, int g, int b) {
+        return (255 << 24) | (r << 16) | (g << 8) | b;
+    }
+
+    public static int hex2argb(int hex) {
+        return (255 << 24) | hex;
     }
 
     public static int scaleIterationsToRgb(int iterations) {
@@ -122,7 +134,7 @@ public class ImageGen {
     @Getter
     @RequiredArgsConstructor
     public static class FractalImage {
-        private final BufferedImage image;
+        private final Image image;
         private final long duration;
     }
 }

@@ -12,8 +12,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -140,7 +138,7 @@ public class Window extends Application {
 
                     // Set the background image
                     Window.ROOT_PANE.get().setBackground(new Background(new BackgroundImage(
-                            new ImageView(new Image(ImageGen.toInputStream(fractal.getImage()))).getImage(),
+                            fractal.getImage(),
                             BackgroundRepeat.NO_REPEAT,
                             BackgroundRepeat.NO_REPEAT,
                             BackgroundPosition.CENTER,
