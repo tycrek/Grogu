@@ -117,7 +117,7 @@ public class ConfigureBox {
             if (col == 0) row++;
         }
 
-        val scene = new Scene(gridPane);
+        val scene = new Scene(gridPane, 480, 400);
         childWindow = new Stage();
         childWindow.setTitle("Configuration");
         childWindow.setScene(scene);
