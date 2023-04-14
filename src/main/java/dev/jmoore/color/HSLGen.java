@@ -77,6 +77,6 @@ public class HSLGen {
         int green = (int) ((g + m) * 255);
         int blue = (int) ((b + m) * 255);
 
-        return ImageGen.rgb2hex(red, green, blue);
+        return Convert.rgb2hex(red, green, blue);
     }
 }

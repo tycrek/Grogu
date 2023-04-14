@@ -1,5 +1,6 @@
 package dev.jmoore;
 
+import dev.jmoore.color.Convert;
 import dev.jmoore.color.HSLGen;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
@@ -39,7 +40,7 @@ public class ImageGen {
                 var mandelResult = Fractal.isInMandelbrotSet(properCoords[0], properCoords[1]);
 
                 // Convert to a normalized scale of 0-255
-                int iterations = scaleIterationsToRgb(mandelResult.getIterations(), true);
+                int iterations = Convert.scaleIterationsToRgb(mandelResult.getIterations(), true);
 
                 // Set the pixel
                 pixels[x + y * width] = getColourByMode(
@@ -65,33 +66,12 @@ public class ImageGen {
     public static int getColourByMode(ImageGen.Mode mode, boolean isInSet, int width, int height, int x, int y, int iterations) {
         // * Future tycrek: this CANNOT be ternary operators, it's too messy
         if (isInSet)
-            return rgb2argb(0, 0, 0);
+            return Convert.rgb2argb(0, 0, 0);
         return switch (mode) {
             case HSL_REGULAR, HSL_INVERTED, HSL_INVERTED_2, HSL_REGULAR_2 ->
-                    hex2argb(HSLGen.generateColor(x, y, iterations));
-            case RGB_Tycrek_1 -> rgb2argb(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
+                    Convert.hex2argb(HSLGen.generateColor(x, y, iterations));
+            case RGB_Tycrek_1 -> Convert.rgb2argb(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
         };
-    }
-
-    public static int rgb2hex(int r, int g, int b) {
-        return (r << 16) | (g << 8) | b;
-    }
-
-    public static int rgb2argb(int r, int g, int b) {
-        return (255 << 24) | (r << 16) | (g << 8) | b;
-    }
-
-    public static int hex2argb(int hex) {
-        return (255 << 24) | hex;
-    }
-
-    public static int scaleIterationsToRgb(int iterations) {
-        return scaleIterationsToRgb(iterations, false);
-    }
-
-    public static int scaleIterationsToRgb(int iterations, boolean invert) {
-        iterations = invert ? GenConfig.Fractal.Iterations - iterations : iterations;
-        return (int) (((double) iterations / GenConfig.Fractal.Iterations) * 255.0);
     }
 
     @SneakyThrows
