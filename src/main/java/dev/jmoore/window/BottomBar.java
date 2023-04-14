@@ -35,7 +35,10 @@ public class BottomBar {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         // Configure button will open the configure box
-        configureButton.setOnAction(event -> window.getConfigureBox().getChildWindow().show());
+        configureButton.setOnAction(event -> {
+            window.getConfigureBox().getChildWindow().show();
+            window.getConfigureBox().getChildWindow().requestFocus();
+        });
 
         // Bottom bar
         bar = new HBox(mousePositionLabel, isInSetLabel, iterationCountLabel, timeTakenLabel, generatingLabel, spacer, configureButton);
