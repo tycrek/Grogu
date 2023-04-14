@@ -8,9 +8,9 @@ import dev.jmoore.ImageGen;
  */
 public class HSLGen {
 
-    public static int generateColor(int x, int y, int scaledValue) {
+    public static int generateColor(int x, int y, int iterations) {
         float hue = calculateHue(x, y);
-        float lightness = calculateLightness(scaledValue);
+        float lightness = calculateLightness(iterations);
         return convertHslToRgb(hue, GenConfig.Image.Saturation, lightness);
     }
 
@@ -23,11 +23,12 @@ public class HSLGen {
         return hue;
     }
 
-    private static float calculateLightness(int scaledValue) {
-        // ! The 255 - part inverts the value
-        // ---------------       ------------------------------
-        float lightness = (255 - (float) scaledValue) / 255.0f;
-        return lightness;
+    private static float calculateLightness(int iterations) {
+        return (
+                GenConfig.Image.Mode == ImageGen.Mode.HSL_INVERTED || GenConfig.Image.Mode == ImageGen.Mode.HSL_INVERTED_2
+                        ? 255.0f - (float) iterations
+                        : (float) iterations)
+                / 255.0f;
     }
 
     private static int convertHslToRgb(float hue, float saturation, float lightness) {
