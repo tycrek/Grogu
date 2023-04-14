@@ -1,6 +1,5 @@
 package dev.jmoore;
 
-import dev.jmoore.color.HSLGen;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.grid.Window2Cartesian;
 import lombok.Getter;
@@ -21,6 +20,10 @@ public class ImageGen {
 
         var start = System.currentTimeMillis();
 
+        // Optimized array storage
+        int[] pixels = new int[width * height];
+
+        // Iterate over every pixel
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
 
@@ -34,14 +37,16 @@ public class ImageGen {
                 // Convert to a normalized scale of 0-255
                 int iterations = scaleIterationsToRgb(mandelResult.getIterations(), true);
 
-                int colour = mandelResult.isInMandelbrotSet()
+                pixels[x + y * width] = mandelResult.isInMandelbrotSet()
                         //? rgb2hex(0, 0, 0)
                         ? 0xFFFFFF
-                        : HSLGen.generateColor(x, y, iterations);
-                //: rgb2hex(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
-                image.setRGB(x, y, colour);
+                        //: HSLGen.generateColor(x, y, iterations);
+                        : rgb2hex(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
             }
         }
+
+        // Set the pixels all at once (significantly faster than setRGB within the loop)
+        image.setRGB(0, 0, width, height, pixels, 0, width);
 
         var end = System.currentTimeMillis();
         System.out.printf("Took %sms to generate image%n", end - start);
