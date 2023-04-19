@@ -1,0 +1,11 @@
+To use these experiments,
+
+: rgb2hex(255 - scaledValue, 255 - scaledValue, 255 - scaledValue);
+: rgb2hex(r360+x -2, g360, b360); // really trippy at fullscreen
+: HSLGen.generateColor(x, y, scaledValue);
+: rgb2hex(x + y + scaledValue, x - y + scaledValue, x + y + scaledValue);
+: rgb2hex(x^ scaledValue, y ^ scaledValue, x + y);
+: rgb2hex((x^y), (y^x), (x^y)*(y^x));
+: rgb2hex(100 + scaledValue * 2, scaledValue * 6, 50 + scaledValue * 5);
+: rgb2hex(scaledValue * (int)W2CCoords.centerX, scaledValue, 50);
+: rgb2hex(250 - scaledValue * 4, 10 + scaledValue * 2, scaledValue * 3);
