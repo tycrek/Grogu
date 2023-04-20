@@ -1,36 +1,48 @@
 package dev.jmoore.color;
 
-import dev.jmoore.GenConfig;
+import dev.jmoore.Configuration;
 import dev.jmoore.ImageGen;
 
 /**
  * Thanks to ChatGPT for the HSL to RGB conversion code.
+ * Comments and explanations have been added by me.
  */
 public class HSLGen {
 
+    /**
+     * Generates a colour for the given x, y, and iterations.
+     */
     public static int generateColor(int x, int y, int iterations) {
         float hue = calculateHue(x, y);
         float lightness = calculateLightness(iterations);
-        return convertHslToRgb(hue, GenConfig.Image.Saturation, lightness);
+        return convertHslToRgb(hue, Configuration.Image.Saturation, lightness);
     }
 
+    /**
+     * Calculates the hue of the given x and y coordinates.
+     */
     private static float calculateHue(int x, int y) {
         double angle = Math.atan2(y, x);
         float hue = (float) Math.toDegrees(angle);
-        if (hue < 0) {
-            hue += 360;
-        }
-        return hue;
+        return hue < 0 ? hue + 360 : hue;
     }
 
+    /**
+     * Calculates the lightness of the given iterations.
+     * <p>
+     * By default, image will appear light-to-dark.
+     * If inverted, image will appear dark-to-light.
+     */
     private static float calculateLightness(int iterations) {
-        return (
-                GenConfig.Image.Mode == ImageGen.Mode.HSL_INVERTED || GenConfig.Image.Mode == ImageGen.Mode.HSL_INVERTED_2
-                        ? 255.0f - (float) iterations
-                        : (float) iterations)
+        return (Configuration.Image.Mode == ImageGen.Mode.HSL_INVERTED || Configuration.Image.Mode == ImageGen.Mode.HSL_INVERTED_2
+                ? 255.0f - (float) iterations
+                : (float) iterations)
                 / 255.0f;
     }
 
+    /**
+     * Converts the given HSL values to an RGB integer.
+     */
     private static int convertHslToRgb(float hue, float saturation, float lightness) {
 
         // Represents the chroma, which is the difference between the maximum and minimum values of a color channel.
@@ -43,7 +55,7 @@ public class HSLGen {
         // Represents the amount of lightness or darkness added to the color.
         float m = lightness - c / 2;
 
-        // Calculated using the values of c, x, and m and then combined to form the final RGB color.
+        // Final RGB is calculated using the values of c, x, and m and then combined to form the final RGB color.
         float r, g, b;
 
         // The hue value is used to determine which of the six possible cases the color falls into.
@@ -73,6 +85,7 @@ public class HSLGen {
             b = x;
         }
 
+        // The RGB values are then multiplied by 255 to convert them to the range 0-255.
         int red = (int) ((r + m) * 255);
         int green = (int) ((g + m) * 255);
         int blue = (int) ((b + m) * 255);

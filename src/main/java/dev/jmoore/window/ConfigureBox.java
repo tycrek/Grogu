@@ -1,6 +1,6 @@
 package dev.jmoore.window;
 
-import dev.jmoore.GenConfig;
+import dev.jmoore.Configuration;
 import dev.jmoore.Grogu;
 import dev.jmoore.grid.W2CCoords;
 import dev.jmoore.window.events.TextFieldKeyTypedValidationHandler;
@@ -31,14 +31,14 @@ public class ConfigureBox {
     private final MandelInputPane centerXInput = new MandelInputPane(Grogu.Axis.X, "Center");
     private final MandelInputPane centerYInput = new MandelInputPane(Grogu.Axis.Y, "Center");
     // Fractal config text fields
-    private final TextField fractalIterationsTextField = new TextField(Integer.toString(GenConfig.Fractal.Iterations));
-    private final TextField fractalEscapeRadiusTextField = new TextField(Double.toString(GenConfig.Fractal.EscapeRadius));
-    private final TextField fractalZScaleTextField = new TextField(Double.toString(GenConfig.Fractal.ZScale));
-    private final TextField fractalRealPartZTextField = new TextField(Double.toString(GenConfig.Fractal.RealPartZ));
-    private final TextField fractalImaginaryPartZTextField = new TextField(Double.toString(GenConfig.Fractal.ImaginaryPartZ));
+    private final TextField fractalIterationsTextField = new TextField(Integer.toString(Configuration.Fractal.Iterations));
+    private final TextField fractalEscapeRadiusTextField = new TextField(Double.toString(Configuration.Fractal.EscapeRadius));
+    private final TextField fractalZScaleTextField = new TextField(Double.toString(Configuration.Fractal.ZScale));
+    private final TextField fractalRealPartZTextField = new TextField(Double.toString(Configuration.Fractal.RealPartZ));
+    private final TextField fractalImaginaryPartZTextField = new TextField(Double.toString(Configuration.Fractal.ImaginaryPartZ));
     // Image config text fields
-    private final TextField resolutionXTextField = new TextField(Integer.toString(GenConfig.Image.ResolutionX));
-    private final TextField resolutionYTextField = new TextField(Integer.toString(GenConfig.Image.ResolutionY));
+    private final TextField resolutionXTextField = new TextField(Integer.toString(Configuration.Image.ResolutionX));
+    private final TextField resolutionYTextField = new TextField(Integer.toString(Configuration.Image.ResolutionY));
 
     // Fractal config labels
     private final Label fractalIterationsLabel = new Label("Iterations:");
@@ -146,13 +146,13 @@ public class ConfigureBox {
         W2CCoords.centerX = Double.parseDouble(xCenterText);
         W2CCoords.centerY = Double.parseDouble(yCenterText);
         // Fractal config
-        GenConfig.Fractal.Iterations = Integer.parseInt(fractalIterationsText);
-        GenConfig.Fractal.EscapeRadius = Double.parseDouble(fractalEscapeRadiusText);
-        GenConfig.Fractal.ZScale = Double.parseDouble(fractalZScaleText);
-        GenConfig.Fractal.RealPartZ = Double.parseDouble(fractalRealPartZText);
-        GenConfig.Fractal.ImaginaryPartZ = Double.parseDouble(fractalImaginaryPartZText);
+        Configuration.Fractal.Iterations = Integer.parseInt(fractalIterationsText);
+        Configuration.Fractal.EscapeRadius = Double.parseDouble(fractalEscapeRadiusText);
+        Configuration.Fractal.ZScale = Double.parseDouble(fractalZScaleText);
+        Configuration.Fractal.RealPartZ = Double.parseDouble(fractalRealPartZText);
+        Configuration.Fractal.ImaginaryPartZ = Double.parseDouble(fractalImaginaryPartZText);
         // Image config
-        GenConfig.Image.ResolutionX = Integer.parseInt(resolutionXText);
-        GenConfig.Image.ResolutionY = Integer.parseInt(resolutionYText);
+        Configuration.Image.ResolutionX = Integer.parseInt(resolutionXText);
+        Configuration.Image.ResolutionY = Integer.parseInt(resolutionYText);
     }
 }

@@ -9,14 +9,7 @@ import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.val;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
 
 public class ImageGen {
@@ -34,8 +27,8 @@ public class ImageGen {
 
                 // Subtract from X and Y to center the image
                 // todo: make this a config option and play with it more
-                double realPartC = (x) - (GenConfig.Image.ResolutionX / 2.0) * W2CCoords.xScale;
-                double imaginaryPartC = (y) - (GenConfig.Image.ResolutionY / 2.0) * W2CCoords.yScale;
+                double realPartC = (x) - (Configuration.Image.ResolutionX / 2.0) * W2CCoords.xScale;
+                double imaginaryPartC = (y) - (Configuration.Image.ResolutionY / 2.0) * W2CCoords.yScale;
                 var properCoords = Window2Cartesian.convert(realPartC, imaginaryPartC);
                 var mandelResult = Fractal.isInMandelbrotSet(properCoords[0], properCoords[1]);
 
@@ -44,7 +37,7 @@ public class ImageGen {
 
                 // Set the pixel
                 pixels[x + y * width] = getColourByMode(
-                        GenConfig.Image.Mode,
+                        Configuration.Image.Mode,
                         mandelResult.isInMandelbrotSet(),
                         width, height, x, y, iterations);
             }
@@ -66,19 +59,15 @@ public class ImageGen {
     public static int getColourByMode(ImageGen.Mode mode, boolean isInSet, int width, int height, int x, int y, int iterations) {
         // * Future tycrek: this CANNOT be ternary operators, it's too messy
         if (isInSet)
-            return Convert.rgb2argb(0, 0, 0);
+            return switch (mode) {
+                case HSL_REGULAR_2, HSL_INVERTED -> 0xFFFFFFFF;
+                default -> 0xFF000000;
+            };
         return switch (mode) {
             case HSL_REGULAR, HSL_INVERTED, HSL_INVERTED_2, HSL_REGULAR_2 ->
                     Convert.hex2argb(HSLGen.generateColor(x, y, iterations));
             case RGB_Tycrek_1 -> Convert.rgb2argb(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
         };
-    }
-
-    @SneakyThrows
-    public static InputStream toInputStream(BufferedImage image) {
-        val os = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", os);
-        return new ByteArrayInputStream(os.toByteArray());
     }
 
     /**

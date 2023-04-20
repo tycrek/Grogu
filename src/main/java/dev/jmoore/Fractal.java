@@ -6,26 +6,21 @@ public class Fractal {
     public static FractalResult isInMandelbrotSet(double realPartC, double imaginaryPartC) {
 
         // Set Z_0 to 0 initially
-        double realPartZ = GenConfig.Fractal.RealPartZ;
-        double imaginaryPartZ = GenConfig.Fractal.ImaginaryPartZ;
+        double realPartZ = Configuration.Fractal.RealPartZ;
+        double imaginaryPartZ = Configuration.Fractal.ImaginaryPartZ;
 
         // Iterate the Mandelbrot equation
         int iteration = 0;
-        while ((iteration < GenConfig.Fractal.Iterations)
-                && ((realPartZ * realPartZ) + (imaginaryPartZ * imaginaryPartZ) < GenConfig.Fractal.EscapeRadius)) {
+        while ((iteration < Configuration.Fractal.Iterations)
+                && ((realPartZ * realPartZ) + (imaginaryPartZ * imaginaryPartZ) < Configuration.Fractal.EscapeRadius)) {
             double nextRealPartZ = (realPartZ * realPartZ) - (imaginaryPartZ * imaginaryPartZ) + realPartC;
-            double nextImaginaryPartZ = GenConfig.Fractal.ZScale * (realPartZ * imaginaryPartZ) + imaginaryPartC;
+            double nextImaginaryPartZ = Configuration.Fractal.ZScale * (realPartZ * imaginaryPartZ) + imaginaryPartC;
             realPartZ = nextRealPartZ;
             imaginaryPartZ = nextImaginaryPartZ;
             iteration++;
         }
 
-        if (iteration == GenConfig.Fractal.Iterations)
-            // * The point is MOST LIKELY in the Mandelbrot set
-            return new FractalResult(true, iteration);
-        else
-            // ! The point is NOT in the Mandelbrot set
-            return new FractalResult(false, iteration);
+        return new FractalResult(iteration == Configuration.Fractal.Iterations, iteration);
     }
 
     @Data

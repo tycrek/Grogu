@@ -1,6 +1,6 @@
 package dev.jmoore.color;
 
-import dev.jmoore.GenConfig;
+import dev.jmoore.Configuration;
 
 public class Convert {
     public static int rgb2hex(int r, int g, int b) {
@@ -15,12 +15,8 @@ public class Convert {
         return (255 << 24) | hex;
     }
 
-    public static int scaleIterationsToRgb(int iterations) {
-        return scaleIterationsToRgb(iterations, false);
-    }
-
     public static int scaleIterationsToRgb(int iterations, boolean invert) {
-        iterations = invert ? GenConfig.Fractal.Iterations - iterations : iterations;
-        return (int) (((double) iterations / GenConfig.Fractal.Iterations) * 255.0);
+        iterations = invert ? Configuration.Fractal.Iterations - iterations : iterations;
+        return (int) (((double) iterations / Configuration.Fractal.Iterations) * 255.0);
     }
 }

@@ -1,7 +1,7 @@
 package dev.jmoore.window;
 
+import dev.jmoore.Configuration;
 import dev.jmoore.Fractal;
-import dev.jmoore.GenConfig;
 import dev.jmoore.Grogu;
 import dev.jmoore.ImageGen;
 import dev.jmoore.grid.W2CCoords;
@@ -155,7 +155,7 @@ public class Window extends Application {
     private double rescaleOnScroll(ScrollEvent event, Grogu.Axis axis) {
         boolean isNegative = Double.toString(event.getDeltaY()).contains("-");
         return axis == Grogu.Axis.X
-                ? isNegative ? W2CCoords.xScale * GenConfig.Image.ScaleFactor : W2CCoords.xScale / GenConfig.Image.ScaleFactor
-                : isNegative ? W2CCoords.yScale * GenConfig.Image.ScaleFactor : W2CCoords.yScale / GenConfig.Image.ScaleFactor;
+                ? isNegative ? W2CCoords.xScale * Configuration.Image.ScaleFactor : W2CCoords.xScale / Configuration.Image.ScaleFactor
+                : isNegative ? W2CCoords.yScale * Configuration.Image.ScaleFactor : W2CCoords.yScale / Configuration.Image.ScaleFactor;
     }
 }

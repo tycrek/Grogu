@@ -7,10 +7,12 @@ public class Window2Cartesian {
 
     /**
      * Thanks to ChatGPT for pixel-to-Cartesian conversion code!
+     * Comments and general cleanup done by tycrek.
      */
     public static double[] convert(double x, double y) {
-        double scaleFactorX = W2CCoords.xScale / W2CCoords.width; // pixel-to-Cartesian scale factor for x-axis
-        double scaleFactorY = W2CCoords.yScale / W2CCoords.height; // pixel-to-Cartesian scale factor for y-axis
+        // Pixel-to-Cartesian scale factor for each axis
+        double scaleFactorX = W2CCoords.xScale / W2CCoords.width;
+        double scaleFactorY = W2CCoords.yScale / W2CCoords.height;
 
         // Calculate Cartesian coordinates
         double cartesianX = W2CCoords.centerX + (x - W2CCoords.width / 2) * scaleFactorX;
