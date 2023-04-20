@@ -2,8 +2,6 @@ package dev.jmoore;
 
 import dev.jmoore.color.Convert;
 import dev.jmoore.color.HSLGen;
-import dev.jmoore.grid.W2CCoords;
-import dev.jmoore.grid.Window2Cartesian;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
@@ -27,9 +25,9 @@ public class ImageGen {
 
                 // Subtract from X and Y to center the image
                 // todo: make this a config option and play with it more
-                double realPartC = (x) - (Configuration.Image.ResolutionX / 2.0) * W2CCoords.xScale;
-                double imaginaryPartC = (y) - (Configuration.Image.ResolutionY / 2.0) * W2CCoords.yScale;
-                var properCoords = Window2Cartesian.convert(realPartC, imaginaryPartC);
+                double realPartC = (x) - (Configuration.Image.ResolutionX / 2.0) * Cartesian.Coords.xScale;
+                double imaginaryPartC = (y) - (Configuration.Image.ResolutionY / 2.0) * Cartesian.Coords.yScale;
+                var properCoords = Cartesian.convert(realPartC, imaginaryPartC);
                 var mandelResult = Fractal.isInMandelbrotSet(properCoords[0], properCoords[1]);
 
                 // Convert to a normalized scale of 0-255

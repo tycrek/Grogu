@@ -1,7 +1,7 @@
 package dev.jmoore.window;
 
 import dev.jmoore.Grogu;
-import dev.jmoore.grid.W2CCoords;
+import dev.jmoore.Cartesian;
 import dev.jmoore.window.events.TextFieldKeyTypedValidationHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
@@ -19,7 +19,7 @@ public class MandelInputPane extends FlowPane {
         super(Orientation.HORIZONTAL, 4.0, 4.0);
 
         // Create the text field
-        textField = new TextField(Double.toString(use.equals("Scale") ? (axis == Grogu.Axis.X ? W2CCoords.xScale : W2CCoords.yScale) : W2CCoords.centerX));
+        textField = new TextField(Double.toString(use.equals("Scale") ? (axis == Grogu.Axis.X ? Cartesian.Coords.xScale : Cartesian.Coords.yScale) : Cartesian.Coords.centerX));
 
         // * Any key handler: handles input validation per character
         textField.addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(textField, true, true));

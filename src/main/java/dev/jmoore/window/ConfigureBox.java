@@ -2,7 +2,7 @@ package dev.jmoore.window;
 
 import dev.jmoore.Configuration;
 import dev.jmoore.Grogu;
-import dev.jmoore.grid.W2CCoords;
+import dev.jmoore.Cartesian;
 import dev.jmoore.window.events.TextFieldKeyTypedValidationHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -141,10 +141,10 @@ public class ConfigureBox {
         var resolutionYText = cb.getResolutionYTextField().getText();
 
         // Coordinates
-        W2CCoords.xScale = Double.parseDouble(xText);
-        W2CCoords.yScale = Double.parseDouble(yText);
-        W2CCoords.centerX = Double.parseDouble(xCenterText);
-        W2CCoords.centerY = Double.parseDouble(yCenterText);
+        Cartesian.Coords.xScale = Double.parseDouble(xText);
+        Cartesian.Coords.yScale = Double.parseDouble(yText);
+        Cartesian.Coords.centerX = Double.parseDouble(xCenterText);
+        Cartesian.Coords.centerY = Double.parseDouble(yCenterText);
         // Fractal config
         Configuration.Fractal.Iterations = Integer.parseInt(fractalIterationsText);
         Configuration.Fractal.EscapeRadius = Double.parseDouble(fractalEscapeRadiusText);

@@ -4,8 +4,7 @@ import dev.jmoore.Configuration;
 import dev.jmoore.Fractal;
 import dev.jmoore.Grogu;
 import dev.jmoore.ImageGen;
-import dev.jmoore.grid.W2CCoords;
-import dev.jmoore.grid.Window2Cartesian;
+import dev.jmoore.Cartesian;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -50,7 +49,7 @@ public class Window extends Application {
 
         // Mouse MOVE listener
         scene.setOnMouseMoved(event -> {
-            double[] cartesian = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
+            double[] cartesian = Cartesian.convert(event.getSceneX(), event.getSceneY());
 
             // Update mouse position labels
             bottomBar.getMousePositionLabel().setText(String.format("Mouse position:%nX: (%s) %s%nY: (%s) %s",
@@ -68,11 +67,11 @@ public class Window extends Application {
             if (Grogu.isGenerating.get()) return;
 
             // Convert to cartesian coordinates
-            double[] cartesian = Window2Cartesian.convert(event.getSceneX(), event.getSceneY());
-            W2CCoords.centerX = cartesian[0];
-            W2CCoords.centerY = cartesian[1];
-            configureBox.getCenterXInput().getTextField().setText(Double.toString(W2CCoords.centerX));
-            configureBox.getCenterYInput().getTextField().setText(Double.toString(W2CCoords.centerY));
+            double[] cartesian = Cartesian.convert(event.getSceneX(), event.getSceneY());
+            Cartesian.Coords.centerX = cartesian[0];
+            Cartesian.Coords.centerY = cartesian[1];
+            configureBox.getCenterXInput().getTextField().setText(Double.toString(Cartesian.Coords.centerX));
+            configureBox.getCenterYInput().getTextField().setText(Double.toString(Cartesian.Coords.centerY));
             updateRootPaneBackground(stage);
         });
 
@@ -80,10 +79,10 @@ public class Window extends Application {
         scene.setOnScroll(event -> {
             if (Grogu.isGenerating.get()) return;
 
-            W2CCoords.xScale = rescaleOnScroll(event, Grogu.Axis.X);
-            W2CCoords.yScale = rescaleOnScroll(event, Grogu.Axis.Y);
-            configureBox.getScaleXInput().getTextField().setText(Double.toString(W2CCoords.xScale));
-            configureBox.getScaleYInput().getTextField().setText(Double.toString(W2CCoords.yScale));
+            Cartesian.Coords.xScale = rescaleOnScroll(event, Grogu.Axis.X);
+            Cartesian.Coords.yScale = rescaleOnScroll(event, Grogu.Axis.Y);
+            configureBox.getScaleXInput().getTextField().setText(Double.toString(Cartesian.Coords.xScale));
+            configureBox.getScaleYInput().getTextField().setText(Double.toString(Cartesian.Coords.yScale));
             updateRootPaneBackground(stage);
         });
 
@@ -95,8 +94,8 @@ public class Window extends Application {
             if (Grogu.isGenerating.get()) return;
 
             updateRootPaneBackground(stage);
-            if (axis == Grogu.Axis.X) W2CCoords.width = newSize.doubleValue();
-            else if (axis == Grogu.Axis.Y) W2CCoords.height = newSize.doubleValue();
+            if (axis == Grogu.Axis.X) Cartesian.Coords.width = newSize.doubleValue();
+            else if (axis == Grogu.Axis.Y) Cartesian.Coords.height = newSize.doubleValue();
         };
 
         // Add the listener
@@ -126,7 +125,7 @@ public class Window extends Application {
         bottomBar.getGeneratingLabel().setVisible(true);
 
         // Generate the fractal asynchronously
-        ImageGen.generateAsync((int) W2CCoords.width, (int) W2CCoords.height)
+        ImageGen.generateAsync((int) Cartesian.Coords.width, (int) Cartesian.Coords.height)
 
                 // * Platform.runLater() is required to update the UI from a different thread
                 .thenAccept(fractal -> Platform.runLater(() -> {
@@ -155,7 +154,7 @@ public class Window extends Application {
     private double rescaleOnScroll(ScrollEvent event, Grogu.Axis axis) {
         boolean isNegative = Double.toString(event.getDeltaY()).contains("-");
         return axis == Grogu.Axis.X
-                ? isNegative ? W2CCoords.xScale * Configuration.Image.ScaleFactor : W2CCoords.xScale / Configuration.Image.ScaleFactor
-                : isNegative ? W2CCoords.yScale * Configuration.Image.ScaleFactor : W2CCoords.yScale / Configuration.Image.ScaleFactor;
+                ? isNegative ? Cartesian.Coords.xScale * Configuration.Image.ScaleFactor : Cartesian.Coords.xScale / Configuration.Image.ScaleFactor
+                : isNegative ? Cartesian.Coords.yScale * Configuration.Image.ScaleFactor : Cartesian.Coords.yScale / Configuration.Image.ScaleFactor;
     }
 }
