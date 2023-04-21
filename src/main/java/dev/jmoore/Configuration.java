@@ -13,7 +13,7 @@ public class Configuration {
         public static int ResolutionX = 1;
         public static int ResolutionY = 1;
         public static double ScaleFactor = 2.0;
-        public static ImageGen.Mode Mode = ImageGen.Mode.HSL_REGULAR;
+        public static ImageGen.Mode Mode = ImageGen.Mode.SkyBlue;
         public static float Saturation = 0.7f;
 
         public static double Softness = 1.6;

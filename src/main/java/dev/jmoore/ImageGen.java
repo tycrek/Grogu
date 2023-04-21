@@ -65,6 +65,99 @@ public class ImageGen {
             case HSL_REGULAR, HSL_INVERTED, HSL_INVERTED_2, HSL_REGULAR_2 ->
                     Convert.hex2argb(HSLGen.generateColor(x, y, iterations));
             case RGB_Tycrek_1 -> Convert.rgb2argb(255 - iterations * 5, 255 - iterations * 6, iterations * 7);
+            case Red_Scale_50_stops -> {
+                // 50 shades of red, evenly distributed through the iterations
+                int red = (int) (iterations * (255.0 / Configuration.Fractal.Iterations));
+                yield Convert.rgb2argb(red, 0, 0);
+            }
+            case Rainbow -> {
+                // 7 colours of the rainbow
+                int colours = 7;
+                int rb_red = Convert.rgb2argb(255, 0, 0);
+                int rb_orange = Convert.rgb2argb(255, 127, 0);
+                int rb_yellow = Convert.rgb2argb(255, 255, 0);
+                int rb_green = Convert.rgb2argb(0, 255, 0);
+                int rb_blue = Convert.rgb2argb(0, 0, 255);
+                int rb_indigo = Convert.rgb2argb(75, 0, 130);
+                int rb_violet = Convert.rgb2argb(143, 0, 255);
+
+                int remainder = iterations % colours;
+
+                yield switch (remainder) {
+                    case 0 -> rb_red;
+                    case 1 -> rb_orange;
+                    case 2 -> rb_yellow;
+                    case 3 -> rb_green;
+                    case 4 -> rb_blue;
+                    case 5 -> rb_indigo;
+                    case 6 -> rb_violet;
+                    default -> rb_red;
+                };
+            }
+            case CottonCandy -> {
+                int remainder = iterations % 10;
+                yield switch (remainder) {
+                    case 1 -> Convert.hex2argb(HSLGen.convertHslToRgb(0.5f, 0.5f, 0.6f));
+                    case 2 -> Convert.hex2argb(HSLGen.convertHslToRgb(0.5f, 0.5f, 0.7f));
+                    case 3 -> Convert.hex2argb(HSLGen.convertHslToRgb(0.5f, 0.5f, 0.8f));
+                    case 4 -> Convert.hex2argb(HSLGen.convertHslToRgb(0.5f, 0.5f, 0.9f));
+                    case 5 -> Convert.hex2argb(HSLGen.convertHslToRgb(0.5f, 0.5f, 1.0f));
+                    case 6 -> Convert.hex2argb(HSLGen.convertHslToRgb(0.5f, 0.5f, 1.1f));
+                    case 7 -> Convert.hex2argb(HSLGen.convertHslToRgb(0.5f, 0.5f, 1.2f));
+                    case 8 -> Convert.hex2argb(HSLGen.convertHslToRgb(0.5f, 0.5f, 1.3f));
+                    case 9 -> Convert.hex2argb(HSLGen.convertHslToRgb(0.5f, 0.5f, 1.4f));
+                    default -> HSLGen.convertHslToRgb(0.5f, 0.5f, 0.5f);
+                };
+            }
+            case CheshireCat -> {
+                int remainder = iterations % 10;
+                yield switch (remainder) {
+                    case 1 -> Convert.hex2argb(HSLGen.convertHslToRgb(200, 1, 10));
+                    case 2 -> Convert.hex2argb(HSLGen.convertHslToRgb(200, 1, 20));
+                    case 3 -> Convert.hex2argb(HSLGen.convertHslToRgb(200, 1, 30));
+                    case 4 -> Convert.hex2argb(HSLGen.convertHslToRgb(200, 1, 40));
+                    case 5 -> Convert.hex2argb(HSLGen.convertHslToRgb(200, 1, 50));
+                    case 6 -> Convert.hex2argb(HSLGen.convertHslToRgb(200, 1, 60));
+                    case 7 -> Convert.hex2argb(HSLGen.convertHslToRgb(200, 1, 70));
+                    case 8 -> Convert.hex2argb(HSLGen.convertHslToRgb(200, 1, 80));
+                    case 9 -> Convert.hex2argb(HSLGen.convertHslToRgb(200, 1, 90));
+                    default -> HSLGen.convertHslToRgb(200, 1, 100);
+                };
+            }
+            case EarthTones -> {
+                int remainder = iterations % 6;
+                int et_grass = Convert.hex2argb(HSLGen.convertHslToRgb(131, 0.68f, 0.36f));
+                int et_dirt = Convert.hex2argb(HSLGen.convertHslToRgb(30, 0.55f, 0.26f));
+                int et_rock = Convert.hex2argb(HSLGen.convertHslToRgb(0, 0, 0.5f));
+                int et_snow = Convert.hex2argb(HSLGen.convertHslToRgb(0, 0, 1));
+                int et_sand = Convert.hex2argb(HSLGen.convertHslToRgb(60, 0.5f, 0.9f));
+                int et_water = Convert.hex2argb(HSLGen.convertHslToRgb(195, 0.75f, 0.6f));
+                yield switch (remainder) {
+                    case 1 -> et_dirt;
+                    case 2 -> et_rock;
+                    case 3 -> et_snow;
+                    case 4 -> et_sand;
+                    case 5 -> et_water;
+                    default -> et_grass;
+                };
+            }
+            case SkyBlue -> {
+                int remainder = iterations % 6;
+                int sb_1 = Convert.hex2argb(HSLGen.convertHslToRgb(195, 0.75f, 0.3f));
+                int sb_2 = Convert.hex2argb(HSLGen.convertHslToRgb(195, 0.75f, 0.4f));
+                int sb_3 = Convert.hex2argb(HSLGen.convertHslToRgb(195, 0.75f, 0.5f));
+                int sb_4 = Convert.hex2argb(HSLGen.convertHslToRgb(195, 0.75f, 0.6f));
+                int sb_5 = Convert.hex2argb(HSLGen.convertHslToRgb(195, 0.75f, 0.7f));
+                int sb_6 = Convert.hex2argb(HSLGen.convertHslToRgb(195, 0.75f, 0.8f));
+                yield switch (remainder) {
+                    case 1 -> sb_1;
+                    case 2 -> sb_2;
+                    case 3 -> sb_3;
+                    case 4 -> sb_4;
+                    case 5 -> sb_5;
+                    default -> sb_6;
+                };
+            }
         };
     }
 
@@ -96,6 +189,18 @@ public class ImageGen {
          * RGB mode, my first attempt at a color scheme
          */
         RGB_Tycrek_1,
+
+        Red_Scale_50_stops,
+
+        Rainbow,
+
+        CottonCandy,
+
+        CheshireCat,
+
+        EarthTones,
+
+        SkyBlue,
     }
 
     @Getter
