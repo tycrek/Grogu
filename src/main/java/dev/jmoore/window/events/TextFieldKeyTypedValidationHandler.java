@@ -31,7 +31,7 @@ public class TextFieldKeyTypedValidationHandler implements EventHandler<KeyEvent
                 || input.equals("\t") // ? Allow tab
                 || input.equals("\r") // ? Allow enter
                 || input.equals("\u001B") // ? Allow escape
-                || input.matches("[0-9]"))) // ? Allow numbers
+                || input.matches("[0-9e]"))) // ? Allow numbers
             return;
 
         // Last-minute override checks
