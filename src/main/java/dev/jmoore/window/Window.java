@@ -7,6 +7,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
@@ -40,6 +41,7 @@ public class Window extends Application {
 
         // Image view
         imageView = new ImageView();
+        imageView.setEffect(new GaussianBlur(Configuration.Image.Softness));
         imageView.setPreserveRatio(true);
 
         // Primary pane
