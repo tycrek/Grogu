@@ -42,8 +42,12 @@ public class HSLGen {
 
     /**
      * Converts the given HSL values to an RGB integer.
+     *
+     * @param hue        The hue of the color, from 0.0f to 360.0f.
+     * @param saturation The saturation of the color, from 0.0f to 1.0f.
+     * @param lightness  The lightness of the color, from 0.0f to 1.0f.
      */
-    private static int convertHslToRgb(float hue, float saturation, float lightness) {
+    public static int convertHslToRgb(float hue, float saturation, float lightness) {
 
         // Represents the chroma, which is the difference between the maximum and minimum values of a color channel.
         // In this case, it represents the amount of saturation in the color.
