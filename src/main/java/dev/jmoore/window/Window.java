@@ -7,8 +7,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import lombok.Getter;
 
@@ -24,6 +25,8 @@ public class Window extends Application {
     private ConfigureBox configureBox;
     @Getter
     private BottomBar bottomBar;
+    @Getter
+    private ImageView imageView;
 
     @Override
     public void start(Stage stage) {
@@ -35,8 +38,12 @@ public class Window extends Application {
         bottomBar = new BottomBar(this);
         configureBox = new ConfigureBox(this, stage);
 
+        // Image view
+        imageView = new ImageView();
+        imageView.setPreserveRatio(true);
+
         // Primary pane
-        StackPane rootPane = new StackPane(bottomBar.getBar());
+        StackPane rootPane = new StackPane(imageView, bottomBar.getBar());
         StackPane.setAlignment(bottomBar.getBar(), Pos.BOTTOM_CENTER);
         ROOT_PANE.set(rootPane);
 
@@ -68,7 +75,7 @@ public class Window extends Application {
             Cartesian.Coords.centerY = cartesian[1];
             configureBox.getCenterXInput().getTextField().setText(Double.toString(Cartesian.Coords.centerX));
             configureBox.getCenterYInput().getTextField().setText(Double.toString(Cartesian.Coords.centerY));
-            updateRootPaneBackground(stage);
+            updateImageView();
         });
 
         // "Zoom" on scroll
@@ -79,7 +86,7 @@ public class Window extends Application {
             Cartesian.Coords.yScale = rescaleOnScroll(event, Grogu.Axis.Y);
             configureBox.getScaleXInput().getTextField().setText(Double.toString(Cartesian.Coords.xScale));
             configureBox.getScaleYInput().getTextField().setText(Double.toString(Cartesian.Coords.yScale));
-            updateRootPaneBackground(stage);
+            updateImageView();
         });
 
         //#endregion
@@ -105,7 +112,7 @@ public class Window extends Application {
             }
 
             if (Grogu.isGenerating.get()) return;
-            updateRootPaneBackground(stage);
+            updateImageView();
         };
 
         // Add the listener
@@ -125,12 +132,12 @@ public class Window extends Application {
         stage.setOnCloseRequest(event -> System.exit(0));
 
         // Set the initial background
-        updateRootPaneBackground(stage);
+        updateImageView();
 
         //#endregion
     }
 
-    public void updateRootPaneBackground(Stage stage) {
+    public void updateImageView() {
         Grogu.isGenerating.set(true);
         bottomBar.getGeneratingLabel().setVisible(true);
 
@@ -145,19 +152,8 @@ public class Window extends Application {
                     bottomBar.getTimeTakenLabel().setText((String.format("Time taken:%n%sms", fractal.getDuration())));
                     bottomBar.getGeneratingLabel().setVisible(false);
 
-                    // Set the background image
-                    Window.ROOT_PANE.get().setBackground(new Background(new BackgroundImage(
-                            fractal.getImage(),
-                            BackgroundRepeat.NO_REPEAT,
-                            BackgroundRepeat.NO_REPEAT,
-                            BackgroundPosition.CENTER,
-                            new BackgroundSize(
-                                    stage.getWidth(),
-                                    stage.getHeight(),
-                                    false,
-                                    false,
-                                    false,
-                                    false))));
+                    // Update the image
+                    imageView.setImage(fractal.getImage());
                 }));
     }
 

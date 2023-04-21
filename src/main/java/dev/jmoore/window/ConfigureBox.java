@@ -57,7 +57,7 @@ public class ConfigureBox {
             try {
                 parseDoubles(this);
                 if (event.getCode().equals(KeyCode.ENTER))
-                    window.updateRootPaneBackground(parentStage);
+                    window.updateImageView();
             } catch (NumberFormatException e) {
                 System.err.println("Invalid input");
                 SimpleAlert.show("Invalid input", "Check your input and try again");
