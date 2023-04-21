@@ -1,10 +1,6 @@
 package dev.jmoore.window;
 
-import dev.jmoore.Configuration;
-import dev.jmoore.Fractal;
-import dev.jmoore.Grogu;
-import dev.jmoore.ImageGen;
-import dev.jmoore.Cartesian;
+import dev.jmoore.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -89,13 +85,27 @@ public class Window extends Application {
         //#endregion
         //#region       Window resize operations
 
-        // Long story here, todo: update this comment
+        // Constructs a window size listener for the given axis
         Function<Grogu.Axis, ChangeListener<Number>> makeListener = (axis) -> (obs, oldSize, newSize) -> {
-            if (Grogu.isGenerating.get()) return;
+            System.out.printf("Window %s resized from %s to %s%n", axis, oldSize, newSize);
 
+            if (axis == Grogu.Axis.X)
+                Cartesian.Coords.width = newSize.doubleValue() - 16;
+            else if (axis == Grogu.Axis.Y)
+                Cartesian.Coords.height = newSize.doubleValue() - bottomBar.getBar().getHeight() / 2;
+
+            // Calculate aspect ratio to maintain the Cartesian Coords scales (thanks CoPilot)
+            double aspectRatio = Cartesian.Coords.width / Cartesian.Coords.height;
+            if (aspectRatio > 1) {
+                Cartesian.Coords.xScale = Cartesian.Coords.yScale * aspectRatio;
+                configureBox.getScaleXInput().getTextField().setText(Double.toString(Cartesian.Coords.xScale));
+            } else {
+                Cartesian.Coords.yScale = Cartesian.Coords.xScale / aspectRatio;
+                configureBox.getScaleYInput().getTextField().setText(Double.toString(Cartesian.Coords.yScale));
+            }
+
+            if (Grogu.isGenerating.get()) return;
             updateRootPaneBackground(stage);
-            if (axis == Grogu.Axis.X) Cartesian.Coords.width = newSize.doubleValue();
-            else if (axis == Grogu.Axis.Y) Cartesian.Coords.height = newSize.doubleValue();
         };
 
         // Add the listener
