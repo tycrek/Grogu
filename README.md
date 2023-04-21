@@ -35,6 +35,11 @@ Grogu is a character in the show The Mandalorian. Mandalorian -> Mandal. Mandal 
 Want to give it a try? Download the [latest release](https://github.com/tycrek/Grogu/releases/latest).
 
 ![image](https://user-images.githubusercontent.com/29926144/231901638-5cda3b92-e43e-4efc-a574-8173c7b385ce.png)
+![image](https://user-images.githubusercontent.com/29926144/233565106-8ae50724-77e9-4003-9afe-edff1081a974.png)
+![image](https://user-images.githubusercontent.com/29926144/233565121-8310979d-ae4f-4c65-a342-92071dc8d1ce.png)
+![image](https://user-images.githubusercontent.com/29926144/233565140-fc29b4c9-7eaa-4dd9-af05-a15a1eba12a2.png)
+
+![image](https://user-images.githubusercontent.com/29926144/233564960-9d3bf942-ca46-474a-953a-37affe0936a6.png)
 
 #### Demos from initial experiments
 
