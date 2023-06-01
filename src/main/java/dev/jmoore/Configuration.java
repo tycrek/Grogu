@@ -15,7 +15,5 @@ public class Configuration {
         public static double ScaleFactor = 2.0;
         public static ImageGen.Mode Mode = ImageGen.Mode.SkyBlue;
         public static float Saturation = 0.7f;
-
-        public static double Softness = 1.6;
     }
 }
