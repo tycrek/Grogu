@@ -121,7 +121,12 @@ public class ConfigureBox {
         childWindow = new Stage();
         childWindow.setTitle("Configuration");
         childWindow.setScene(scene);
-        //childWindow.show();
+
+        // Close on ESC
+        childWindow.addEventHandler(KeyEvent.KEY_PRESSED, (event) -> {
+            if (event.getCode().equals(KeyCode.ESCAPE))
+                childWindow.close();
+        });
     }
 
     public static void parseDoubles(ConfigureBox cb) {
