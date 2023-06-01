@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -43,6 +44,9 @@ public class Window extends Application {
         imageView.setSmooth(true);
         imageView.setPreserveRatio(true);
 
+        // When right-clicked, open configure box
+        imageView.setOnContextMenuRequested(event -> bottomBar.getConfigureButton().fire());
+
         // Primary pane
         StackPane rootPane = new StackPane(imageView, bottomBar.getBar());
         StackPane.setAlignment(bottomBar.getBar(), Pos.BOTTOM_CENTER);
@@ -68,7 +72,8 @@ public class Window extends Application {
 
         // Mouse CLICK listener
         scene.setOnMouseClicked(event -> {
-            if (Grogu.isGenerating.get()) return;
+            // Check when button it is
+            if (Grogu.isGenerating.get() || event.getButton() == MouseButton.SECONDARY) return;
 
             // Convert to cartesian coordinates
             double[] cartesian = Cartesian.convert(event.getSceneX(), event.getSceneY());
