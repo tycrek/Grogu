@@ -1,12 +1,15 @@
 package dev.jmoore.window;
 
+import dev.jmoore.Cartesian;
 import dev.jmoore.Configuration;
 import dev.jmoore.Grogu;
-import dev.jmoore.Cartesian;
+import dev.jmoore.ImageGen;
 import dev.jmoore.window.events.TextFieldKeyTypedValidationHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -39,6 +42,8 @@ public class ConfigureBox {
     // Image config text fields
     private final TextField resolutionXTextField = new TextField(Integer.toString(Configuration.Image.ResolutionX));
     private final TextField resolutionYTextField = new TextField(Integer.toString(Configuration.Image.ResolutionY));
+    // Image mode menu
+    private final MenuButton modeMenu = new MenuButton(Configuration.Image.Mode.toString());
 
     // Fractal config labels
     private final Label fractalIterationsLabel = new Label("Iterations:");
@@ -49,6 +54,7 @@ public class ConfigureBox {
     // Image config labels
     private final Label resolutionXLabel = new Label("Resolution X:");
     private final Label resolutionYLabel = new Label("Resolution Y:");
+    private final Label modeLabel = new Label("Mode:");
 
     public ConfigureBox(Window window, Stage parentStage) {
 
@@ -87,6 +93,17 @@ public class ConfigureBox {
         resolutionYTextField.addEventHandler(KeyEvent.KEY_RELEASED, inputHandler::accept);
         resolutionYTextField.addEventHandler(KeyEvent.KEY_TYPED, new TextFieldKeyTypedValidationHandler(resolutionYTextField, false, false));
 
+        // Add mode menu items
+        for (val mode : ImageGen.Mode.values()) {
+            val menuItem = new MenuItem(mode.toString());
+            menuItem.setOnAction((event) -> {
+                modeMenu.setText(mode.toString());
+                Configuration.Image.Mode = mode;
+                window.updateImageView();
+            });
+            modeMenu.getItems().add(menuItem);
+        }
+
         // * Set up the GridPane
         GridPane gridPane = new GridPane();
         //gridPane.setHgap(10);
@@ -101,7 +118,8 @@ public class ConfigureBox {
                 fractalRealPartZLabel, fractalRealPartZTextField,
                 fractalImaginaryPartZLabel, fractalImaginaryPartZTextField,
                 resolutionXLabel, resolutionXTextField,
-                resolutionYLabel, resolutionYTextField
+                resolutionYLabel, resolutionYTextField,
+                modeLabel, modeMenu
         ));
 
         // Iterate over the child nodes and add them to the grid
