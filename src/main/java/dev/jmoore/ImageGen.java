@@ -158,6 +158,17 @@ public class ImageGen {
                     default -> sb_6;
                 };
             }
+            case Green3 -> {
+                int remainder = iterations % 3;
+                int g3_1 = Convert.hex2argb(HSLGen.convertHslToRgb(120, 0.75f, 0.3f));
+                int g3_2 = Convert.hex2argb(HSLGen.convertHslToRgb(120, 0.75f, 0.5f));
+                int g3_3 = Convert.hex2argb(HSLGen.convertHslToRgb(120, 0.75f, 0.7f));
+                yield switch (remainder) {
+                    case 1 -> g3_1;
+                    case 2 -> g3_2;
+                    default -> g3_3;
+                };
+            }
         };
     }
 
@@ -201,6 +212,8 @@ public class ImageGen {
         EarthTones,
 
         SkyBlue,
+
+        Green3,
     }
 
     @Getter
