@@ -169,6 +169,10 @@ public class ImageGen {
                     default -> g3_3;
                 };
             }
+            case PinkGradient100Stops -> Convert.hex2argb(HSLGen.convertHslToRgb(300, 1, iterations / 100f));
+            case PinkGradient500Stops -> Convert.hex2argb(HSLGen.convertHslToRgb(300, 1, iterations / 500f));
+            case Hue360 -> Convert.hex2argb(HSLGen.convertHslToRgb(iterations % 360, 1, 0.5f));
+            case OnlyWhite -> Convert.hex2argb(0xFFFFFF);
         };
     }
 
@@ -214,6 +218,13 @@ public class ImageGen {
         SkyBlue,
 
         Green3,
+
+        PinkGradient100Stops,
+        PinkGradient500Stops,
+
+        Hue360,
+
+        OnlyWhite,
     }
 
     @Getter
