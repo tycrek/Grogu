@@ -1,12 +1,17 @@
 package dev.jmoore.window;
 
+import dev.jmoore.Configuration;
+import dev.jmoore.ImageGen;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import lombok.Getter;
+import lombok.val;
 
 @Getter
 public class BottomBar {
@@ -22,6 +27,8 @@ public class BottomBar {
     private final Label timeTakenLabel = new Label("Time taken:\n0ms");
     private final Label generatingLabel = new Label("Generating...");
 
+    // Buttons
+    private final MenuButton modeMenu = new MenuButton(Configuration.Image.Mode.toString());
     private final Button configureButton = new Button("Configure");
 
     {
@@ -34,6 +41,17 @@ public class BottomBar {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        // Add mode menu items
+        for (val mode : ImageGen.Mode.values()) {
+            val menuItem = new MenuItem(mode.toString());
+            menuItem.setOnAction((event) -> {
+                modeMenu.setText(mode.toString());
+                Configuration.Image.Mode = mode;
+                window.updateImageView();
+            });
+            modeMenu.getItems().add(menuItem);
+        }
+
         // Configure button will open the configure box
         configureButton.setOnAction(event -> {
             window.getConfigureBox().getChildWindow().show();
@@ -41,7 +59,7 @@ public class BottomBar {
         });
 
         // Bottom bar
-        bar = new HBox(mousePositionLabel, isInSetLabel, iterationCountLabel, timeTakenLabel, generatingLabel, spacer, configureButton);
+        bar = new HBox(mousePositionLabel, isInSetLabel, iterationCountLabel, timeTakenLabel, generatingLabel, spacer, modeMenu, configureButton);
         bar.setStyle("-fx-background-color: #222; -fx-padding: 4px;");
         bar.setMaxHeight(Region.USE_PREF_SIZE);
         bar.setAlignment(Pos.CENTER);
