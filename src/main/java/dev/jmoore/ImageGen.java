@@ -173,6 +173,20 @@ public class ImageGen {
             case PinkGradient500Stops -> Convert.hex2argb(HSLGen.convertHslToRgb(300, 1, iterations / 500f));
             case Hue360 -> Convert.hex2argb(HSLGen.convertHslToRgb(iterations % 360, 1, 0.5f));
             case OnlyWhite -> Convert.hex2argb(0xFFFFFF);
+            case Enby -> {
+                // 4 colours:
+                // - fff433: yellow
+                // - ffffff: white
+                // - 9b59d0: purple
+                // - 2d2d2d: black
+                int remainder = iterations % 4;
+                yield switch (remainder) {
+                    case 1 -> Convert.hex2argb(0xfff433);
+                    case 2 -> Convert.hex2argb(0xffffff);
+                    case 3 -> Convert.hex2argb(0x9b59d0);
+                    default -> Convert.hex2argb(0x2d2d2d);
+                };
+            }
         };
     }
 
@@ -225,6 +239,8 @@ public class ImageGen {
         Hue360,
 
         OnlyWhite,
+
+        Enby,
     }
 
     @Getter
